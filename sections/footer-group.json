@@ -1,0 +1,142 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer-features": {
+      "type": "footer-features",
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "icon": "globe",
+            "title": "Free shipping",
+            "text": "<p>For all orders over $100!</p>",
+            "image": ""
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "icon": "phone",
+            "title": "+30 1234 56789",
+            "text": "<p>support@example.com</p>",
+            "image": ""
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "icon": "returns",
+            "title": "Free returns",
+            "text": "<p>No questions asked</p>",
+            "image": ""
+          }
+        },
+        "feature-4": {
+          "type": "feature",
+          "settings": {
+            "icon": "star-empty",
+            "title": "TrustScore 4.9",
+            "text": "<p>More than 3000 <a href=\"#\" title=\"#\">Trustpilot reviews</a></p>",
+            "image": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature-1",
+        "feature-2",
+        "feature-3",
+        "feature-4"
+      ],
+      "settings": {
+        "inline": false,
+        "stack_on_mobile": true,
+        "auto_rotate": false,
+        "icon_size": "large",
+        "color_scheme": "background-2",
+        "spacing_top": 46,
+        "spacing_bottom": 46,
+        "content_color_scheme": "background-1",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "newsletter_enable": true,
+        "title": "Our newsletter",
+        "text": "Subscribe to our newsletter and receive special offers",
+        "consent_checkbox": false,
+        "consent_text": "<p>I agree to receive marketing emails and special deals.</p>",
+        "color_scheme": "accent-1",
+        "remove_borders": false,
+        "spacing_top": 30,
+        "spacing_bottom": 30,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "title": "",
+            "image": "",
+            "link": "",
+            "image_width": 160,
+            "text": "<p>Athens Power Tools Ltd. <br/>5-19 Nelson Parade,<br/>Manchester, AB1 2CD</p><p>Mon-Fri 8am-5pm<br/>GB 123 4567 89</p>"
+          }
+        },
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "title": "Useful Links",
+            "menu": ""
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "title": "Popular Categories",
+            "menu": ""
+          }
+        },
+        "text-2": {
+          "type": "text",
+          "settings": {
+            "title": "Pay Securely",
+            "link": "",
+            "image_width": 340,
+            "text": "<p>We take your security and privacy very seriously. We do not keep or store Credit/Debit card details once they have been processed.</p>",
+            "image": ""
+          }
+        }
+      },
+      "block_order": [
+        "text-1",
+        "menu-1",
+        "menu-2",
+        "text-2"
+      ],
+      "settings": {
+        "payment_enable": true,
+        "enable_language_selector": false,
+        "enable_country_selector": false,
+        "show_social": true,
+        "enable_follow_on_shop": true,
+        "color_scheme": "background-2",
+        "enable_country_selector_flag": false
+      }
+    }
+  },
+  "order": [
+    "footer-features",
+    "newsletter",
+    "footer"
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "sections": {
+    "main-product": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_vendor": true,
+            "show_stock": true,
+            "show_sku": true,
+            "show_barcode": false,
+            "barcode_label": "Barcode",
+            "show_rating": false,
+            "hide_empty_star_rating": false,
+            "show_custom_badges": false,
+            "show_bottom_divider": true
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.metafields.descriptors.subtitle.value }}",
+            "icon": "",
+            "text_2": "",
+            "icon_2": "",
+            "text_3": "",
+            "icon_3": "",
+            "text_4": "",
+            "icon_4": "",
+            "color_scheme": "none",
+            "show_bottom_divider": false
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_bottom_divider": false
+          }
+        },
+        "variants": {
+          "type": "variants",
+          "settings": {
+            "picker_type": "button",
+            "hide_single_variant": false,
+            "out_of_stock_variants": "show",
+            "show_bottom_divider": false
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity": true,
+            "show_add_to_cart": true,
+            "show_buy_now": true,
+            "show_gift_card_recipient": false,
+            "show_bottom_divider": false
+          }
+        },
+        "request_information": {
+          "type": "request_information",
+          "settings": {
+            "expanded": false,
+            "heading": "Have questions?",
+            "description": "<p>Fill in the form below, and we'll get back to you with more information as soon as possible.</p>",
+            "color_scheme": "background-2",
+            "show_bottom_divider": false
+          }
+        },
+        "info_box": {
+          "type": "info_box",
+          "settings": {
+            "enable_payment_icons": true,
+            "heading": "Accepted payment methods",
+            "text": "<p>We accept a variety of trusted payment methods.</p>",
+            "icon": "info",
+            "color_foreground": "#004fc7",
+            "color_background": "#f0f6ff",
+            "show_bottom_divider": false
+          }
+        },
+        "availability": {
+          "type": "availability",
+          "settings": {
+            "show_bottom_divider": false
+          }
+        },
+        "extra": {
+          "type": "extra",
+          "settings": {
+            "text": "<p>Got questions?</p><p>Feel free to <a href=\"#\" title=\"Contact Us\">get in touch</a></p>",
+            "show_facebook": true,
+            "show_twitter": true,
+            "show_linkedin": true,
+            "show_bottom_divider": false
+          }
+        },
+        "contact_details": {
+          "type": "contact_details",
+          "settings": {
+            "heading": "...or just ask an expert!",
+            "image": "",
+            "video_chat_link": "#",
+            "chat_link": "#",
+            "email": "example@example.com",
+            "phone_number": "+55 555-12345",
+            "color_scheme": "background-2",
+            "show_bottom_divider": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "title": "Description",
+            "icon": "info",
+            "expanded": true
+          }
+        },
+        "details": {
+          "type": "details",
+          "settings": {
+            "title": "Helpful documents",
+            "icon": "document",
+            "position": "left",
+            "expanded": false,
+            "show_type": false,
+            "show_vendor": false,
+            "show_sku": false,
+            "show_barcode": true,
+            "barcode_label": "Barcode",
+            "metafields": "User manual: custom.user_manual\nSafety instructions: custom.safety_instructions",
+            "text": "<p>Additional text can be added before or after this table.</p>",
+            "text_position": "after",
+            "show_bottom_divider": false
+          }
+        },
+        "reviews": {
+          "type": "reviews",
+          "settings": {
+            "expanded": false,
+            "show_count": false
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "text",
+        "price",
+        "variants",
+        "buy_buttons",
+        "request_information",
+        "info_box",
+        "availability",
+        "extra",
+        "contact_details",
+        "description",
+        "details",
+        "reviews"
+      ],
+      "settings": {
+        "hide_variants": false,
+        "arrow_navigation": false,
+        "thumbnail_navigation": false,
+        "image_zoom_type": "lightbox",
+        "image_ratio": "adapt",
+        "image_disclaimer": "",
+        "collapse_other_expandables": false
+      }
+    },
+    "expandable": {
+      "type": "expandable",
+      "blocks": {
+        "expandable-1": {
+          "type": "expandable",
+          "settings": {
+            "heading": "How do pre-orders work?",
+            "icon": "info",
+            "text": "<p>Pre-orders allow you to reserve a product before it is officially available. By placing a preorder, you guarantee that you will receive the product as soon as it is in stock. We will notify you via email with updates on your order status and shipping information.</p>",
+            "expanded": true
+          }
+        },
+        "expandable-2": {
+          "type": "expandable",
+          "settings": {
+            "heading": "When will my pre-order ship?",
+            "icon": "info",
+            "text": "<p>Preordered items are expected to ship within <strong>2-4 weeks</strong> of placing your order. We will do our best to keep you updated on the exact shipping date and notify you as soon as your product has been dispatched.</p>",
+            "expanded": false
+          }
+        },
+        "expandable-3": {
+          "type": "expandable",
+          "settings": {
+            "heading": "Can I cancel or change my preorder?",
+            "icon": "info",
+            "text": "<p>Yes, you can cancel or modify your pre-order as long as it has not yet been processed for shipment. Please <a href=\"#\" title=\"Contact Us\">contact our customer service team</a> to make changes to your order.</p>",
+            "expanded": false
+          }
+        },
+        "expandable-4": {
+          "type": "expandable",
+          "settings": {
+            "heading": "Will I be charged immediately for my preorder?",
+            "icon": "info",
+            "text": "<p>Yes, payment is processed at the time of placing your preorder to secure your product. This ensures that your item is reserved and will be shipped to you as soon as it becomes available.</p>",
+            "expanded": false
+          }
+        }
+      },
+      "block_order": [
+        "expandable-1",
+        "expandable-2",
+        "expandable-3",
+        "expandable-4"
+      ],
+      "settings": {
+        "narrow": false,
+        "heading": "Frequently Asked Questions",
+        "heading_size": "md",
+        "subheading": "",
+        "heading_alignment": "left",
+        "color_scheme": "background-2",
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "show": true,
+        "title": "Related products",
+        "count": "4",
+        "mobile_columns": "1",
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": false,
+        "color_scheme": "background-1",
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "heading_size": "md",
+        "heading_tag": "h2"
+      }
+    },
+    "recently-viewed-products": {
+      "type": "recently-viewed-products",
+      "settings": {
+        "products_to_show": 5,
+        "heading": "Recently viewed",
+        "heading_size": "md",
+        "subheading": "",
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": true,
+        "layout": "grid",
+        "columns": "5",
+        "stack_on_mobile": false,
+        "mobile_columns": "1",
+        "color_scheme": "background-1",
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
+    }
+  },
+  "order": [
+    "main-product",
+    "expandable",
+    "product-recommendations",
+    "recently-viewed-products"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "main-page-brands": {
+      "type": "main-page-brands",
+      "blocks": {
+        "brand-1": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "brand-2": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "brand-3": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "brand-4": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "brand-5": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "brand-6": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "brand-7": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "brand-8": {
+          "type": "brand",
+          "settings": {
+            "collection": ""
+          }
+        }
+      },
+      "block_order": [
+        "brand-1",
+        "brand-2",
+        "brand-3",
+        "brand-4",
+        "brand-5",
+        "brand-6",
+        "brand-7",
+        "brand-8"
+      ],
+      "settings": {
+        "columns": 4,
+        "image_ratio": "adapt",
+        "hide_heading": false
+      }
+    }
+  },
+  "order": [
+    "main-page-brands"
+  ]
+}

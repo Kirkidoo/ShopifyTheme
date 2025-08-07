@@ -1,0 +1,14 @@
+/* 404 - Not found template
+=================================== */
+.block-section-404 {
+  text-align: center;
+  margin: 5rem 0;
+}
+
+.template-404 .eyebrow {
+  font-weight: var(--font-bolder-weight);
+}
+
+.template-404 .page-title {
+  margin-bottom: 4rem;
+}

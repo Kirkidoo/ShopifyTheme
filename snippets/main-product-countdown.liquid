@@ -1,0 +1,100 @@
+{% comment %}
+  Renders countdown timer for main product
+
+  Accepts:
+  - block: {Object} Block object with settings
+{% endcomment %}
+
+{% style %}
+  .product-countdown-block {
+    .countdown-timer-expiration-message {
+      margin-bottom: 0;
+      border: 0.1rem solid color-mix(in srgb, rgba(var(--color-border)), transparent 65%);
+
+      p {
+        padding: 1rem;
+        margin: 0;
+      }
+    }
+
+    .product-countdown-title {
+      display: flex;
+      align-items: center;
+    }
+
+    .product-countdown-title svg {
+      margin-inline-end: 0.5rem;
+      width: 24px;
+      height: 24px;
+      flex: none;
+      color: rgba(var(--color-accent-2));
+    }
+
+    .block-countdown-editor-hidden-note {
+      padding: 1rem;
+      background: var(--color-error-background);
+      color: var(--color-error);
+      font-size: calc(var(--font-body-scale) * 1.3rem);
+      opacity: 0.85;
+      border-radius: var(--border-radius);
+      z-index: 5;
+    }
+  }
+{% endstyle %}
+
+{% liquid
+  assign now = 'now' | date: '%s'
+  assign full_date = now | date: '%Y-%m-%d'
+  if block.settings.end_date
+    assign full_date = block.settings.end_date
+  endif
+  if block.settings.end_time
+    assign full_date = full_date | append: ' ' | append: block.settings.end_time
+  else
+    assign full_date = full_date | append: ' 00:00'
+  endif
+  assign expiration_date = full_date | date: '%s'
+
+  # Check if entire block should be hidden when expired
+  assign should_hide_block = false
+  if request.design_mode == false and block.settings.hide_on_expiration and now > expiration_date
+    assign should_hide_block = true
+  endif
+%}
+
+{% unless should_hide_block %}
+  <div class="product-block {% if block.settings.show_bottom_divider %}has-divider{% endif %}">
+    {% assign color_scheme_string = block.settings.color_scheme | append: '' %}
+    {% if color_scheme_string != 'background-1' %}
+      <div
+        class="product-countdown-block product-info-secondary card color-{{ block.settings.color_scheme }}"
+        {{ block.shopify_attributes }}
+      >
+    {% else %}
+      <div class="product-countdown-block product-info-secondary" {{ block.shopify_attributes }}>
+    {% endif %}
+
+    {% if block.settings.title != blank %}
+      <p class="product-countdown-title h5">
+        {% if block.settings.icon != blank %}
+          {% render 'icons', icon: block.settings.icon %}
+        {% endif %}
+        {{ block.settings.title }}
+      </p>
+    {% endif %}
+
+    {% unless block.settings.hide_on_expiration and now > expiration_date %}
+      {% render 'countdown',
+        expiration_date: expiration_date,
+        expiration_message: block.settings.expiration_message
+      %}
+    {% endunless %}
+
+    {% if request.design_mode and block.settings.hide_on_expiration and now > expiration_date %}
+      <div class="block-countdown-editor-hidden-note">
+        {{ 'products.product.countdown_hidden_note' | t }}
+      </div>
+    {% endif %}
+  </div>
+  </div>
+{% endunless %}

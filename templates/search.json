@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "main-search": {
+      "type": "main-search",
+      "settings": {
+        "results_per_page": 24,
+        "desktop_product_columns": "4",
+        "enable_filtering": true,
+        "enable_filters_toggle": true,
+        "filters_toggle_default": "visible",
+        "show_filter_product_count": true,
+        "show_product_count": true,
+        "enable_sorting": true,
+        "hide_empty_filters": false,
+        "filters_bar_sticky": false,
+        "filters_bar_color_scheme": "background-2",
+        "article_show_date": true,
+        "article_show_author": false,
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": true
+      }
+    }
+  },
+  "order": [
+    "main-search"
+  ]
+}

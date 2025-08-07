@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "main-collection-banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_title": true,
+        "show_collection_description": true,
+        "show_collection_image": true,
+        "collection_description_fullwidth": false,
+        "description_lines_to_show": 0,
+        "overlay_opacity": 80,
+        "color_scheme": "background-1"
+      }
+    },
+    "main-collection-subcollections": {
+      "type": "main-collection-subcollections",
+      "settings": {
+        "image_ratio": "landscape",
+        "show_title": true,
+        "show_product_size": true,
+        "layout": "grid",
+        "columns": 8,
+        "stack_on_mobile": false
+      }
+    },
+    "main-collection-product-grid": {
+      "type": "main-collection-product-grid",
+      "blocks": {
+        "inline_card_banner": {
+          "type": "inline_card_banner",
+          "settings": {
+            "banner_position": 8,
+            "hide_on_filtered": false,
+            "image": "",
+            "overlay_background": "linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) 100%)",
+            "heading": "Save up to 20%",
+            "text": "<p>Combi Drill - Limited offer</p>",
+            "link_title": "Buy now",
+            "link_url": "",
+            "color_scheme": "accent-2"
+          }
+        }
+      },
+      "block_order": [
+        "inline_card_banner"
+      ],
+      "settings": {
+        "products_per_page": 23,
+        "products_layout": "grid",
+        "desktop_product_columns": "4",
+        "products_layout_rows_density": "comfortable",
+        "enable_filtering": true,
+        "enable_filters_toggle": true,
+        "filters_toggle_default": "visible",
+        "show_filter_product_count": true,
+        "show_product_count": true,
+        "enable_sorting": true,
+        "hide_empty_filters": false,
+        "filters_bar_sticky": false,
+        "filters_bar_color_scheme": "background-2",
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": true,
+        "side_menu_title": "Collections",
+        "side_menu": "",
+        "products_layout_rows_highlight_color": "#FFFFB5",
+        "side_menu_expand_on_arrow": false
+      }
+    }
+  },
+  "order": [
+    "main-collection-banner",
+    "main-collection-subcollections",
+    "main-collection-product-grid"
+  ]
+}

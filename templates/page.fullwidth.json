@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main-page-fullwidth": {
+      "type": "main-page-fullwidth",
+      "settings": {
+        "hide_heading": false
+      }
+    }
+  },
+  "order": [
+    "main-page-fullwidth"
+  ]
+}

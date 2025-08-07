@@ -1,0 +1,12 @@
+{
+  "layout": false,
+  "sections": {
+    "main": {
+      "type": "main-collection-do-not-use",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

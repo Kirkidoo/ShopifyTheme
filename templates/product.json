@@ -1,0 +1,236 @@
+{
+  "sections": {
+    "main-product": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_vendor": true,
+            "show_stock": true,
+            "show_sku": true,
+            "show_barcode": false,
+            "barcode_label": "Barcode",
+            "show_rating": true,
+            "hide_empty_star_rating": false,
+            "show_custom_badges": false,
+            "show_bottom_divider": true
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.metafields.descriptors.subtitle.value }}",
+            "icon": "",
+            "text_2": "",
+            "icon_2": "",
+            "text_3": "",
+            "icon_3": "",
+            "text_4": "",
+            "icon_4": "",
+            "color_scheme": "none",
+            "show_bottom_divider": false
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_bottom_divider": false
+          }
+        },
+        "variants": {
+          "type": "variants",
+          "settings": {
+            "picker_type": "button",
+            "hide_single_variant": false,
+            "out_of_stock_variants": "show",
+            "show_bottom_divider": false
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity": true,
+            "show_add_to_cart": true,
+            "show_buy_now": true,
+            "show_gift_card_recipient": false,
+            "show_bottom_divider": false
+          }
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "title": "Frequently bought together",
+            "count": 3,
+            "show_vendor": true,
+            "show_rating": true,
+            "show_add_to_cart": true,
+            "show_bottom_divider": false
+          }
+        },
+        "availability": {
+          "type": "availability",
+          "settings": {
+            "show_bottom_divider": false
+          }
+        },
+        "info_box": {
+          "type": "info_box",
+          "settings": {
+            "enable_payment_icons": false,
+            "heading": "Ready to work out of the box!",
+            "text": "<p>All tools are delivered with essential accessories and easy-to-follow instructions. Unbox and start your projects with confidence!</p>",
+            "icon": "box-2",
+            "color_foreground": "#004fc7",
+            "color_background": "#f0f6ff",
+            "show_bottom_divider": true
+          }
+        },
+        "extra": {
+          "type": "extra",
+          "settings": {
+            "text": "<p>Got questions?</p><p>Feel free to <a href=\"#\" title=\"Contact Us\">get in touch</a></p>",
+            "show_facebook": true,
+            "show_twitter": true,
+            "show_linkedin": true,
+            "show_bottom_divider": false
+          }
+        },
+        "contact_details": {
+          "type": "contact_details",
+          "settings": {
+            "heading": "Ask an expert!",
+            "image": "",
+            "video_chat_link": "#",
+            "chat_link": "#",
+            "email": "example@example.com",
+            "phone_number": "+55 555-12345",
+            "color_scheme": "background-2",
+            "show_bottom_divider": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "title": "Description",
+            "icon": "info",
+            "expanded": true
+          }
+        },
+        "details": {
+          "type": "details",
+          "settings": {
+            "title": "Helpful documents",
+            "icon": "document",
+            "position": "left",
+            "expanded": false,
+            "show_type": false,
+            "show_vendor": false,
+            "show_sku": false,
+            "show_barcode": false,
+            "barcode_label": "Barcode",
+            "metafields": "User manual: custom.user_manual\nSafety instructions: custom.safety_instructions",
+            "text": "<p>Additional text can be added before or after this table.</p>",
+            "text_position": "after",
+            "show_bottom_divider": false
+          }
+        },
+        "expandable-1": {
+          "type": "expandable",
+          "settings": {
+            "title": "Shipping information",
+            "icon": "globe",
+            "text": "<p><strong>Order by 2PM to get delivered next working day!</strong> We use 24 hours service with carriers in most cases so that you can get your order delivered on time.</p><p>There is €4.99 charge for delivery under €50 Orders. Additional charges will be imposed by our couriers for delivery to remote area, a surcharge may be levied to cover carriage to these areas.</p>",
+            "expanded": false
+          }
+        },
+        "expandable-2": {
+          "type": "expandable",
+          "settings": {
+            "title": "Warranty",
+            "icon": "shield",
+            "text": "<p>Your product is covered by a 12 month Warranty or more if you opted for the extended warranty. Make sure you register your product.</p>",
+            "expanded": false
+          }
+        },
+        "reviews": {
+          "type": "reviews",
+          "settings": {
+            "expanded": false,
+            "show_count": false
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "text",
+        "price",
+        "variants",
+        "buy_buttons",
+        "complementary",
+        "availability",
+        "info_box",
+        "extra",
+        "contact_details",
+        "description",
+        "details",
+        "expandable-1",
+        "expandable-2",
+        "reviews"
+      ],
+      "settings": {
+        "hide_variants": false,
+        "arrow_navigation": false,
+        "thumbnail_navigation": false,
+        "image_zoom_type": "lightbox_zoom_hover",
+        "image_ratio": "adapt",
+        "image_disclaimer": "<p><strong>Disclaimer:</strong> Actual product colors may vary slightly from the images shown due to different monitor settings and lighting conditions during photo shoots.</p>",
+        "collapse_other_expandables": false
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "show": true,
+        "title": "Related products",
+        "count": "4",
+        "mobile_columns": "1",
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": true,
+        "color_scheme": "background-1",
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "heading_size": "md",
+        "heading_tag": "h2"
+      }
+    },
+    "recently-viewed-products": {
+      "type": "recently-viewed-products",
+      "settings": {
+        "products_to_show": 5,
+        "heading": "Recently viewed",
+        "subheading": "",
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": true,
+        "layout": "grid",
+        "columns": "5",
+        "stack_on_mobile": false,
+        "mobile_columns": "1",
+        "color_scheme": "background-1",
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "heading_size": "md",
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
+    }
+  },
+  "order": [
+    "main-product",
+    "product-recommendations",
+    "recently-viewed-products"
+  ]
+}

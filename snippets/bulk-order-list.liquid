@@ -1,0 +1,113 @@
+{% comment %}
+  Renders the bulk order table.
+
+  Accepts:
+  - product: {Object} Product Liquid object. Required.
+  - per_page: {Number} Show this many variants per page. 0 disables pagination.
+  - color_scheme: {String} The color scheme of the section this is rendered in.
+
+  Usage:
+  {% render 'bulk-order-list', product: product, per_page: 50 %}
+{% endcomment %}
+{% liquid
+  assign pagination = ''
+  assign items_in_cart = cart | line_items_for: product | sum: 'quantity'
+%}
+
+<bulk-order-list
+  id="{{ section.id }}-{{ product.id }}"
+  data-section="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-url="{{ product.url }}"
+>
+  <div class="bulk-order-list-wrapper">
+    <table class="bulk-order-list-table">
+      <thead>
+        <tr>
+          <th scope="col" colspan="2">
+            {{ 'sections.bulk_order_list.headings.variant' | t }}
+          </th>
+          <th scope="col" class="hidden-mobile">
+            {{ 'sections.bulk_order_list.headings.quantity' | t }}
+          </th>
+          <th scope="col" class="hidden-mobile text-end">
+            {{ 'sections.bulk_order_list.headings.price' | t }}
+          </th>
+          <th scope="col" class="text-end">
+            {{ 'sections.bulk_order_list.headings.total' | t }}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% if per_page > 0 %}
+          {% paginate product.variants by per_page %}
+            {%- for variant in product.variants -%}
+              {% render 'bulk-order-list-row', variant: variant %}
+            {%- endfor -%}
+
+            {% capture pagination %}
+              {% render 'pagination', paginate: paginate %}
+            {% endcapture %}
+          {% endpaginate %}
+        {% else %}
+          {%- for variant in product.variants -%}
+            {% render 'bulk-order-list-row', variant: variant %}
+          {%- endfor -%}
+        {% endif %}
+      </tbody>
+    </table>
+
+    <div class="bulk-order-list-total color-{{ color_scheme }}">
+      <div class="bulk-order-list-total-buttons">
+        <a
+          href="{{ routes.cart_url }} "
+          class="bulk-order-list-cart-button button button-tertiary"
+        >
+          {{ 'sections.bulk_order_list.view_cart' | t }}
+          {% render 'angle', direction: 'right' %}
+        </a>
+
+        <button
+          type="button"
+          class="bulk-order-remove-product-from-cart button-text-link"
+          {% unless items_in_cart > 0 %}
+            hidden
+          {% endunless %}
+        >
+          {{ 'sections.bulk_order_list.remove_all' | t }}
+        </button>
+      </div>
+      <div class="bulk-order-list-total-items">
+        <span class="bulk-order-list-total-items-value">
+          {{ items_in_cart }}
+        </span>
+        <span>{{ 'sections.bulk_order_list.total_items' | t }}</span>
+      </div>
+
+      <div class="bulk-order-list-total-price">
+        <div class="bulk-order-list-subtotal">
+          <div class="bulk-order-list-subtotal-value">
+            {% liquid
+              assign price = cart | line_items_for: product | sum: 'original_line_price'
+              assign money_price = price | money
+              if settings.currency_code_enabled
+                assign money_price = price | money_with_currency
+              endif
+            %}
+            {{ money_price }}
+          </div>
+          <p class="bulk-order-list-subtotal-heading">
+            {{ 'sections.bulk_order_list.product_subtotal' | t }}
+          </p>
+        </div>
+      </div>
+
+      <script type="application/json" data-cart-contents>
+        {{ cart | line_items_for: product | map: "variant_id" | json }}
+      </script>
+    </div>
+
+    {{ pagination }}
+  </div>
+</bulk-order-list>

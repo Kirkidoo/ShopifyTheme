@@ -1,0 +1,73 @@
+{% comment %}
+  Renders a testimonial card.
+
+  Options:
+  - rating: The rating of the testimonial (required)
+  - title: The title of the testimonial (optional)
+  - description: The description of the testimonial (optional)
+  - class: Extra classes to add to the card.
+
+  Usage:
+  {% render 'card-testimonial', rating: rating, title: title, description: description %}
+{% endcomment %}
+
+{% liquid
+  assign rating_integer = rating | floor
+  assign decimal = rating | modulo: 1
+  assign rating_decimal = 0
+  if decimal >= 0.3 and decimal <= 0.7
+    assign rating_decimal = 0.5
+  elsif decimal > 0.7
+    assign rating_decimal = 0
+    assign rating_integer = rating_integer | plus: 1
+  endif
+
+  assign card_class = 'card card-testimonial'
+  if class != blank
+    assign card_class = card_class | append: ' ' | append: class
+  endif
+%}
+
+<blockquote class="{{ card_class }}">
+  <div class="card-testimonial-header">
+    {% if title %}
+      <cite class="card-testimonial-citation">{{ title }}</cite>
+    {% endif %}
+
+    <div class="card-testimonial-rating">
+      <div
+        class="rating-stars"
+        role="img"
+        aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: rating, rating_max: 5 }}"
+      >
+        {% liquid
+          if rating
+            for full in (1..rating_integer)
+              render 'rating-star-full'
+            endfor
+            assign rating_integer = rating_integer | plus: 1
+
+            if rating_decimal == 0.5
+              render 'rating-star-half'
+              assign rating_integer = rating_integer | plus: 1
+            endif
+
+            for star_empty in (rating_integer..5)
+              render 'rating-star-empty'
+            endfor
+          else
+            for empty in (1..5)
+              render 'rating-star-empty'
+            endfor
+          endif
+        %}
+      </div>
+    </div>
+  </div>
+
+  {% if description != blank %}
+    <div class="card-testimonial-content rte">
+      {{ description }}
+    </div>
+  {% endif %}
+</blockquote>
