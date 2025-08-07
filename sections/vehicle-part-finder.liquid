@@ -1,0 +1,84 @@
+{{ 'vehicle-part-finder.css' | asset_url | stylesheet_tag }}
+
+<div class="vehicle-part-finder-container" data-section-id="{{ section.id }}">
+  <h2>{{ section.settings.title }}</h2>
+  <div class="vehicle-part-finder-form">
+    <div class="vpf-dropdown-group">
+      <label for="vpf-type">Type</label>
+      <select id="vpf-type" name="type" class="vpf-select">
+        <option value="">Select Type</option>
+      </select>
+    </div>
+    <div class="vpf-dropdown-group">
+      <label for="vpf-make">Make</label>
+      <select id="vpf-make" name="make" class="vpf-select" disabled>
+        <option value="">Select Make</option>
+      </select>
+    </div>
+    <div class="vpf-dropdown-group">
+      <label for="vpf-year">Year</label>
+      <select id="vpf-year" name="year" class="vpf-select" disabled>
+        <option value="">Select Year</option>
+      </select>
+    </div>
+    <div class="vpf-dropdown-group">
+      <label for="vpf-model">Model</label>
+      <select id="vpf-model" name="model" class="vpf-select" disabled>
+        <option value="">Select Model</option>
+      </select>
+    </div>
+    <div class="vpf-button-group">
+      <button id="vpf-find-parts-btn" class="vpf-btn" disabled>Find Parts</button>
+    </div>
+  </div>
+  <div id="vpf-results-container" class="vpf-results-container">
+    <div id="vpf-loader" class="vpf-loader" style="display: none;"></div>
+    <div id="vpf-results-grid" class="vpf-results-grid"></div>
+    <p id="vpf-no-results-message" class="vpf-no-results-message" style="display: none;">No matching parts found.</p>
+  </div>
+</div>
+
+<script src="{{ 'vehicle-part-finder.js' | asset_url }}" defer="defer"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const partFinderElement = document.querySelector('.vehicle-part-finder-container[data-section-id="{{ section.id }}"]');
+    if (partFinderElement) {
+      const settings = {
+        apiKey: {{ section.settings.api_key | json }},
+        apiUrl: {{ section.settings.api_url | json }},
+        sectionId: {{ section.id | json }}
+      };
+      new VehiclePartFinder(partFinderElement, settings);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Vehicle Part Finder",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Find Parts for Your Vehicle"
+    },
+    {
+      "type": "text",
+      "id": "api_url",
+      "label": "API Base URL",
+      "default": "https://api.gammapowersports.com"
+    },
+    {
+      "type": "password",
+      "id": "api_key",
+      "label": "API Key"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vehicle Part Finder"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,163 @@
+.vehicle-part-finder-container {
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.vehicle-part-finder-container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.vehicle-part-finder-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: flex-end;
+}
+
+.vpf-dropdown-group {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vpf-dropdown-group label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.vpf-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.vpf-select:disabled {
+  background-color: #f2f2f2;
+  cursor: not-allowed;
+}
+
+.vpf-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.vpf-button-group {
+  flex-shrink: 0;
+}
+
+.vpf-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.vpf-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.vpf-btn:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+.vpf-results-container {
+  position: relative;
+  min-height: 100px;
+}
+
+.vpf-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: vpf-spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+  margin-top: -20px; /* Adjust for container padding */
+}
+
+@keyframes vpf-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.vpf-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.vpf-product-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  transition: box-shadow 0.3s;
+}
+
+.vpf-product-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.vpf-product-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.vpf-product-card-img-container {
+  width: 100%;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  position: relative;
+  background-color: #f5f5f5;
+}
+
+.vpf-product-card-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vpf-product-card-info {
+  padding: 15px;
+}
+
+.vpf-product-card-title {
+  font-weight: 500;
+  margin: 0 0 5px 0;
+}
+
+.vpf-product-card-sku {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.vpf-no-results-message {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #666;
+}
