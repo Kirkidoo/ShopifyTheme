@@ -1,1 +1,161 @@
-{"name":"t:sections.header.name","type":"header","sections":{"announcement-bar":{"type":"announcement-bar","settings":{"text":"Free shipping for all orders over €100","link":"","menu":"","text_size":"sm","show_social":true,"enable_language_selector":false,"enable_country_selector":false,"enable_country_selector_flag":false,"color_scheme":"background-2","remove_border":false,"spacing_top":1.3,"spacing_bottom":1.3,"show_on_desktop":true,"show_on_mobile":true,"hide_if_empty":false}},"header":{"type":"header","settings":{"logo_width":160,"promo_icon":"chat","promo_title":"<p>418 368-6684<\/p>","promo_text":"<p>info@garageharrystanley.com<\/p>","menu":"main-menu","menu_right":"","main_menu_nav_font_size":13,"menu_main_nav_uppercase":true,"menu_main_align_center":false,"menu_mobile":"","menu_mobile_expand_on_arrow":true,"menu_mobile_position":"start","menu_font":"body","enable_language_selector":true,"enable_country_selector":true,"enable_country_selector_flag":true,"mini_cart_icon":"cart","redirect_to_cart":false,"mini_cart_show_totals":false,"search_display":"show","search_label":"","account_link_text_logged_in":"","account_link_text_logged_out":"","enable_sticky_header":true,"sticky_header_always_on":true,"collapse_navigation":false,"header_color_scheme":"background-1","navigation_color_scheme":"accent-1","navigation_remove_border":false,"navigation_submenu_color_scheme":"background-1","mobile_navigation_color_scheme":"background-1","spacing_top":2.4,"spacing_bottom":2.4,"logo_homepage_tag":"h1"}},"announcement-bar-secondary":{"type":"announcement-bar-secondary","settings":{"text":"","link":"","text_size":"sm","color_scheme":"background-2","remove_border":false,"spacing_top":1.3,"spacing_bottom":1.3,"show_on_desktop":true,"show_on_mobile":true}},"header-features":{"type":"header-features","blocks":{"feature-1":{"type":"feature","settings":{"icon":"truck","title":"Free shipping","text":""}},"feature-2":{"type":"feature","settings":{"icon":"shield","title":"Warranty backed products","text":""}},"feature-3":{"type":"feature","settings":{"icon":"assembly","title":"Industry leading quality","text":""}},"feature-4":{"type":"feature","settings":{"icon":"credit-card","title":"Secure payments","text":""}}},"block_order":["feature-1","feature-2","feature-3","feature-4"],"disabled":true,"settings":{"inline":true,"stack_on_mobile":false,"auto_rotate":true,"icon_size":"small","content_color_scheme":"background-1","color_scheme":"background-2","spacing_top":10,"spacing_bottom":10,"show_on_desktop":true,"show_on_mobile":true,"hide_if_empty":false}}},"order":["announcement-bar","header","announcement-bar-secondary","header-features"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Free shipping for all orders over €100",
+        "link": "",
+        "menu": "",
+        "text_size": "sm",
+        "show_social": true,
+        "enable_language_selector": false,
+        "enable_country_selector": false,
+        "enable_country_selector_flag": false,
+        "color_scheme": "background-2",
+        "remove_border": false,
+        "spacing_top": 1.3,
+        "spacing_bottom": 1.3,
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_width": 160,
+        "promo_icon": "chat",
+        "promo_title": "<p>418 368-6684</p>",
+        "promo_text": "<p>info@garageharrystanley.com</p>",
+        "menu": "main-menu",
+        "menu_right": "",
+        "main_menu_nav_font_size": 13,
+        "menu_main_nav_uppercase": true,
+        "menu_main_align_center": false,
+        "menu_mobile": "",
+        "menu_mobile_expand_on_arrow": true,
+        "menu_mobile_position": "start",
+        "menu_font": "body",
+        "enable_language_selector": true,
+        "enable_country_selector": true,
+        "enable_country_selector_flag": true,
+        "mini_cart_icon": "cart",
+        "redirect_to_cart": false,
+        "mini_cart_show_totals": false,
+        "search_display": "show",
+        "search_label": "",
+        "account_link_text_logged_in": "",
+        "account_link_text_logged_out": "",
+        "enable_sticky_header": true,
+        "sticky_header_always_on": true,
+        "collapse_navigation": false,
+        "header_color_scheme": "background-1",
+        "navigation_color_scheme": "accent-1",
+        "navigation_remove_border": false,
+        "navigation_submenu_color_scheme": "background-1",
+        "mobile_navigation_color_scheme": "background-1",
+        "spacing_top": 2.4,
+        "spacing_bottom": 2.4,
+        "logo_homepage_tag": "h1"
+      }
+    },
+    "announcement-bar-secondary": {
+      "type": "announcement-bar-secondary",
+      "settings": {
+        "text": "",
+        "link": "",
+        "text_size": "sm",
+        "color_scheme": "background-2",
+        "remove_border": false,
+        "spacing_top": 1.3,
+        "spacing_bottom": 1.3,
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
+    },
+    "header-features": {
+      "type": "header-features",
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "icon": "truck",
+            "title": "Free shipping",
+            "text": ""
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "Warranty backed products",
+            "text": ""
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "icon": "assembly",
+            "title": "Industry leading quality",
+            "text": ""
+          }
+        },
+        "feature-4": {
+          "type": "feature",
+          "settings": {
+            "icon": "credit-card",
+            "title": "Secure payments",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature-1",
+        "feature-2",
+        "feature-3",
+        "feature-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "inline": true,
+        "stack_on_mobile": false,
+        "auto_rotate": true,
+        "icon_size": "small",
+        "content_color_scheme": "background-1",
+        "color_scheme": "background-2",
+        "spacing_top": 10,
+        "spacing_bottom": 10,
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
+    "vehicle_part_finder_GfcVCy": {
+      "type": "vehicle-part-finder",
+      "name": "Vehicle Part Finder",
+      "settings": {
+        "title": "Find Parts for Your Vehicle",
+        "api_url": "https://api.gammapowersports.com",
+        "api_key": "037573e5-3cf2-487d-8c00-9c2f313bbf0e"
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header",
+    "announcement-bar-secondary",
+    "header-features",
+    "vehicle_part_finder_GfcVCy"
+  ]
+}
