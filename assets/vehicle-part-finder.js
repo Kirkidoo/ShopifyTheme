@@ -73,22 +73,24 @@ class VehiclePartFinder {
     let page = 1;
     let hasMore = true;
 
-    while(hasMore) {
-        try {
-            const response = await fetch(`/products.json?limit=250&page=${page}`);
-            if (!response.ok) throw new Error('Failed to fetch products');
-            const products = await response.json();
-            if (products.products.length > 0) {
-                allProducts = allProducts.concat(products.products);
-                page++;
-            } else {
-                hasMore = false;
-            }
-        } catch (error) {
-            console.error('VehiclePartFinder: Error loading Shopify products:', error);
-            this.showError('Could not load product data from your store. Check the console for more details.');
-            hasMore = false;
+    while (hasMore) {
+      const response = await fetch(`/products.json?limit=250&page=${page}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.products && data.products.length > 0) {
+          allProducts = allProducts.concat(data.products);
+          page++;
+        } else {
+          // This is the clean exit: we received a response, but it contained no products.
+          hasMore = false;
         }
+      } else {
+        // This handles non-200 responses, including the 400 Bad Request.
+        // We assume any non-OK response means we've hit the end of the line.
+        console.warn(`VehiclePartFinder: Received status ${response.status} when fetching page ${page}. Assuming end of product list.`);
+        hasMore = false;
+      }
     }
 
     allProducts.forEach(product => {
