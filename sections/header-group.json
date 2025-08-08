@@ -143,6 +143,7 @@
     },
     "vehicle_part_finder_GfcVCy": {
       "type": "vehicle-part-finder",
+      "disabled": true,
       "name": "Vehicle Part Finder",
       "settings": {
         "title": "Find Parts for Your Vehicle",
