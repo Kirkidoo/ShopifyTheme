@@ -14,7 +14,7 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "settings": {
-        "text": "Free shipping for all orders over €100",
+        "text": "Free shipping for all orders over $100",
         "link": "",
         "menu": "",
         "text_size": "sm",
