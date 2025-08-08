@@ -1,5 +1,6 @@
 class VehiclePartFinder {
   constructor(element, settings) {
+    console.log('VehiclePartFinder: Initializing with settings:', settings);
     this.container = element;
     this.settings = settings;
     this.shopifyProducts = new Map();
@@ -21,10 +22,12 @@ class VehiclePartFinder {
   }
 
   async init() {
+    console.log('VehiclePartFinder: init() started.');
     this.showLoader();
     await this.loadShopifyProducts();
     await this.loadTypes();
     this.hideLoader();
+    console.log('VehiclePartFinder: init() finished.');
   }
 
   bindEvents() {
@@ -36,6 +39,7 @@ class VehiclePartFinder {
   }
 
   async apiFetch(endpoint, params = {}) {
+    console.log(`VehiclePartFinder: Calling API endpoint: ${endpoint} with params:`, params);
     const url = new URL(`${this.settings.apiUrl}${endpoint}`);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
@@ -50,18 +54,21 @@ class VehiclePartFinder {
         throw new Error(`API request failed with status ${response.status}`);
       }
       const json = await response.json();
+      console.log(`VehiclePartFinder: Raw response from ${endpoint}:`, json);
       if (json.status !== 'success') {
         throw new Error(json.error?.message || 'API returned an error');
       }
+      console.log(`VehiclePartFinder: Received data from ${endpoint}:`, json.data);
       return json.data;
     } catch (error) {
-      console.error('API Fetch Error:', error);
-      this.showError('Failed to fetch data from the parts API.');
+      console.error('VehiclePartFinder: API Fetch Error:', error);
+      this.showError('Failed to fetch data from the parts API. Check the console for more details.');
       return null;
     }
   }
 
   async loadShopifyProducts() {
+    console.log('VehiclePartFinder: Starting to load Shopify products...');
     let allProducts = [];
     let page = 1;
     let hasMore = true;
@@ -78,8 +85,8 @@ class VehiclePartFinder {
                 hasMore = false;
             }
         } catch (error) {
-            console.error('Error fetching Shopify products:', error);
-            this.showError('Could not load product data from your store.');
+            console.error('VehiclePartFinder: Error loading Shopify products:', error);
+            this.showError('Could not load product data from your store. Check the console for more details.');
             hasMore = false;
         }
     }
@@ -96,9 +103,11 @@ class VehiclePartFinder {
         }
       });
     });
+    console.log(`VehiclePartFinder: Finished loading Shopify products. Found ${this.shopifyProducts.size} unique SKUs.`);
   }
 
   async loadTypes() {
+    console.log('VehiclePartFinder: Loading types...');
     const data = await this.apiFetch('/fitment/getFitmentCategories');
     if (data && data.fitmentCategories) {
       const types = new Set();
@@ -110,6 +119,7 @@ class VehiclePartFinder {
   }
 
   async onTypeChange() {
+    console.log('VehiclePartFinder: Type changed. Selected value:', this.elements.type.value);
     this.resetDropdowns(['make', 'year', 'model']);
     const [category, subCategory] = this.elements.type.value.split(' > ');
     if (!category) return;
@@ -124,6 +134,7 @@ class VehiclePartFinder {
   }
 
   async onMakeChange() {
+    console.log('VehiclePartFinder: Make changed. Selected value:', this.elements.make.value);
     this.resetDropdowns(['year', 'model']);
     const [category, subCategory] = this.elements.type.value.split(' > ');
     const make = this.elements.make.value;
@@ -139,6 +150,7 @@ class VehiclePartFinder {
   }
 
   async onYearChange() {
+    console.log('VehiclePartFinder: Year changed. Selected value:', this.elements.year.value);
     this.resetDropdowns(['model']);
     const [category, subCategory] = this.elements.type.value.split(' > ');
     const make = this.elements.make.value;
@@ -155,10 +167,12 @@ class VehiclePartFinder {
   }
 
   onModelChange() {
+    console.log('VehiclePartFinder: Model changed. Selected value:', this.elements.model.value);
     this.elements.findBtn.disabled = !this.elements.model.value;
   }
 
   async findParts() {
+    console.log('VehiclePartFinder: "Find Parts" button clicked.');
     this.showLoader();
     this.elements.resultsGrid.innerHTML = '';
     this.elements.noResultsMsg.style.display = 'none';
@@ -168,14 +182,20 @@ class VehiclePartFinder {
     const model = this.elements.model.value;
     const [category, subCategory] = this.elements.type.value.split(' > ');
 
-    const data = await this.apiFetch('/fitment/getFitmentProducts', { make, year, model, category, subCategory });
+    const searchParams = { make, year, model, category, subCategory };
+    console.log('VehiclePartFinder: Searching with params:', searchParams);
+
+    const data = await this.apiFetch('/fitment/getFitmentProducts', searchParams);
 
     if (data && data.fitmentProducts) {
+      console.log(`VehiclePartFinder: Found ${data.fitmentProducts.length} products from API. Now matching with store products.`);
       const foundProducts = data.fitmentProducts.filter(p => this.shopifyProducts.has(p.itemNumber));
+      console.log(`VehiclePartFinder: Matched ${foundProducts.length} products.`);
 
       if (foundProducts.length > 0) {
         foundProducts.forEach(apiProduct => {
           const shopifyProduct = this.shopifyProducts.get(apiProduct.itemNumber);
+          console.log('VehiclePartFinder: Matched API itemNumber', apiProduct.itemNumber, 'to Shopify product:', shopifyProduct);
           const card = this.createProductCard(shopifyProduct);
           this.elements.resultsGrid.appendChild(card);
         });
@@ -183,6 +203,7 @@ class VehiclePartFinder {
         this.elements.noResultsMsg.style.display = 'block';
       }
     } else {
+      console.log('VehiclePartFinder: No fitment products found in API response.');
       this.elements.noResultsMsg.style.display = 'block';
     }
 
