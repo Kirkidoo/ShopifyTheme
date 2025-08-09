@@ -1,0 +1,182 @@
+{% comment %}
+  **Product Finder Section**
+  - Uses product-finder.js for dynamic functionality.
+  - Allows users to select vehicle details to find compatible parts.
+  - All API endpoints and the API token are configured via theme editor settings.
+{% endcomment %}
+
+{{ 'component-product-finder.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign section_id = section.id
+  assign api_token = settings.fitment_api_token
+  assign get_types_url = section.settings.api_get_types_url
+  assign get_categories_url = section.settings.api_get_categories_url
+  assign get_makes_url = section.settings.api_get_makes_url
+  assign get_years_url = section.settings.api_get_years_url
+  assign get_models_url = section.settings.api_get_models_url
+  assign get_products_url = section.settings.api_get_products_url
+  assign is_toggle_enabled = section.settings.toggle_enabled
+-%}
+
+<div
+  class="fitment-selector-section"
+  data-section-id="{{ section_id }}"
+  data-api-token="{{ api_token | escape }}"
+  data-api-get-types="{{ get_types_url | escape }}"
+  data-api-get-categories="{{ get_categories_url | escape }}"
+  data-api-get-makes="{{ get_makes_url | escape }}"
+  data-api-get-years="{{ get_years_url | escape }}"
+  data-api-get-models="{{ get_models_url | escape }}"
+  data-api-get-products="{{ get_products_url | escape }}"
+  data-toggle-enabled="{{ is_toggle_enabled }}"
+>
+  <div class="page-width">
+    {% if section.settings.heading != blank %}
+      <h2 class="fitment-heading">
+        {{ section.settings.heading | escape }}
+        {% if is_toggle_enabled %}
+          <button class="fitment-toggle-button" aria-expanded="true" aria-controls="fitment-content-{{ section_id }}">
+            <span class="icon-minus">{%- render 'icon-minus' -%}</span>
+            <span class="icon-plus">{%- render 'icon-plus' -%}</span>
+          </button>
+        {% endif %}
+      </h2>
+    {% endif %}
+
+    <div id="fitment-content-{{ section_id }}" class="fitment-content-wrapper">
+      <div class="fitment-selectors-grid">
+        <!-- Type Selector -->
+        <div class="fitment-selector-group">
+          <label for="fitment-type-{{ section_id }}">Type</label>
+          <div class="fitment-select-wrapper">
+            <select id="fitment-type-{{ section_id }}" class="fitment-select" disabled>
+              <option value="" disabled selected>-- Select Type --</option>
+            </select>
+            <div class="fitment-loading-spinner fitment-type-loading"></div>
+          </div>
+        </div>
+
+        <!-- Category Selector -->
+        <div class="fitment-selector-group">
+          <label for="fitment-category-{{ section_id }}">Category</label>
+          <div class="fitment-select-wrapper">
+            <select id="fitment-category-{{ section_id }}" class="fitment-select" disabled>
+              <option value="" disabled selected>-- Select Category --</option>
+            </select>
+            <div class="fitment-loading-spinner fitment-category-loading"></div>
+          </div>
+        </div>
+
+        <!-- Make Selector -->
+        <div class="fitment-selector-group">
+          <label for="fitment-make-{{ section_id }}">Make</label>
+          <div class="fitment-select-wrapper">
+            <select id="fitment-make-{{ section_id }}" class="fitment-select" disabled>
+              <option value="" disabled selected>-- Select Make --</option>
+            </select>
+            <div class="fitment-loading-spinner fitment-make-loading"></div>
+          </div>
+        </div>
+
+        <!-- Year Selector -->
+        <div class="fitment-selector-group">
+          <label for="fitment-year-{{ section_id }}">Year</label>
+          <div class="fitment-select-wrapper">
+            <select id="fitment-year-{{ section_id }}" class="fitment-select" disabled>
+              <option value="" disabled selected>-- Select Year --</option>
+            </select>
+            <div class="fitment-loading-spinner fitment-year-loading"></div>
+          </div>
+        </div>
+
+        <!-- Model Selector -->
+        <div class="fitment-selector-group">
+          <label for="fitment-model-{{ section_id }}">Model</label>
+          <div class="fitment-select-wrapper">
+            <select id="fitment-model-{{ section_id }}" class="fitment-select" disabled>
+              <option value="" disabled selected>-- Select Model --</option>
+            </select>
+            <div class="fitment-loading-spinner fitment-model-loading"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fitment-actions">
+        <button id="fitment-find-parts-{{ section_id }}" class="button button--primary" disabled>
+          Find Parts
+          <div class="fitment-loading-spinner fitment-search-loading"></div>
+        </button>
+        <button id="fitment-reset-{{ section_id }}" class="button button--secondary">Reset</button>
+      </div>
+
+      <div id="fitment-error-message-{{ section_id }}" class="fitment-error-message" style="display:none;"></div>
+
+      <div id="fitment-results-{{ section_id }}" class="fitment-results-container">
+        <p>Please select your vehicle details above to find compatible parts.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Finder",
+  "tag": "section",
+  "class": "section-product-finder",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find Parts for Your Vehicle"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_enabled",
+      "label": "Enable collapsible section",
+      "default": true,
+      "info": "If checked, the section content can be collapsed and expanded."
+    },
+    {
+      "type": "header",
+      "content": "API Configuration"
+    },
+    {
+      "type": "url",
+      "id": "api_get_types_url",
+      "label": "Get Types URL"
+    },
+    {
+      "type": "url",
+      "id": "api_get_categories_url",
+      "label": "Get Categories URL"
+    },
+    {
+      "type": "url",
+      "id": "api_get_makes_url",
+      "label": "Get Makes URL"
+    },
+    {
+      "type": "url",
+      "id": "api_get_years_url",
+      "label": "Get Years URL"
+    },
+    {
+      "type": "url",
+      "id": "api_get_models_url",
+      "label": "Get Models URL"
+    },
+    {
+      "type": "url",
+      "id": "api_get_products_url",
+      "label": "Get Products URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Finder"
+    }
+  ]
+}
+{% endschema %}

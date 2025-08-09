@@ -270,6 +270,21 @@
     ]
   },
   {
+    "name": "API Integrations",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Fitment API"
+      },
+      {
+        "type": "text",
+        "id": "fitment_api_token",
+        "label": "Fitment API Token",
+        "info": "Enter the Bearer Token for the fitment API. This token will be used for all fitment-related features."
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.typography.name",
     "settings": [
       {
