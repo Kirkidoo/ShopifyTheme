@@ -264,7 +264,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof Choices !== 'undefined' && elements.categorySelect && elements.categorySelect.options.length > 1) {
             try {
                 categoryChoicesInstance = new Choices(elements.categorySelect, {
-                    searchEnabled: true, itemSelectText: '', shouldSort: false, placeholder: true, removeItemButton: false, searchPlaceholderValue: "Type to filter categories...",
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false,
+                    placeholder: true,
+                    removeItemButton: false,
+                    searchPlaceholderValue: "Type to filter categories...",
+                    fuseOptions: {
+                        threshold: 0.3,
+                        ignoreLocation: true,
+                        keys: ['label', 'value']
+                    }
                 });
                 elements.categorySelect.disabled = false;
             } catch (e) {
@@ -452,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
         infoElement.appendChild(stockElement);
         const priceElement = document.createElement('div');
         priceElement.className = 'fitment-product-price';
-        priceElement.textContent = typeof variant.price === 'number' ? `$${(variant.price / 100).toFixed(2)}` : 'N/A';
+        priceElement.textContent = typeof variant.price === 'number' ? `${(variant.price / 100).toFixed(2)}` : 'N/A';
         infoElement.appendChild(priceElement);
         cardLink.appendChild(infoElement);
         return cardLink;
