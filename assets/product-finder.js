@@ -270,12 +270,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     placeholder: true,
                     removeItemButton: false,
                     searchPlaceholderValue: "Type to filter categories...",
+                    shouldCloseOnSelect: true, // Explicitly set to close on select
                     fuseOptions: {
                         threshold: 0.3,
                         ignoreLocation: true,
                         keys: ['label', 'value']
                     }
                 });
+
+                // Add event listener to focus search input on dropdown open
+                elements.categorySelect.addEventListener('showDropdown', function() {
+                    const searchInput = elements.categorySelect.closest('.fitment-selector').querySelector('.choices__input--cloned');
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                });
+
                 elements.categorySelect.disabled = false;
             } catch (e) {
                 console.error(`Error initializing Choices.js:`, e);
