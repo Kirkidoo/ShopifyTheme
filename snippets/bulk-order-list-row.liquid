@@ -1,0 +1,91 @@
+{% comment %}
+  Variant List Row
+
+  Accepts:
+  - variant: {Object} Variant object
+
+  Usage:
+  {% render 'bulk-order-list-row' variant: variant %}
+{% endcomment %}
+
+{% liquid
+  assign cart_qty = cart | item_count_for_variant: variant.id
+  assign image = variant.image
+%}
+
+<tr class="bulk-order-list-row">
+  <td class="bulk-variant-thumbnail {% unless image != blank %}bulk-variant-thumbnail-no-image{% endunless %}">
+    <div class="bulk-variant-item-image-container color-background-1">
+      <div class="aspect-ratio" style="--ratio-percent: 100%">
+        {% if image %}
+          {{
+            image
+            | image_url: width: 160
+            | image_tag:
+              loading: 'lazy',
+              fetchpriority: 'low',
+              decoding: 'async',
+              class: 'bulk-variant-item-image',
+              width: 160,
+              widths: '160',
+              alt: image.alt
+            | escape
+          }}
+        {% endif %}
+      </div>
+    </div>
+  </td>
+
+  <td class="bulk-variant-item-details">
+    <div class="bulk-variant-item-info-container">
+      <div class="bulk-variant-item-info">
+        <span class="bulk-variant-item-title">
+          {{ variant.title }}
+        </span>
+        {% if variant.sku != blank %}
+          <span class="bulk-variant-item-sku">
+            {{ variant.sku | escape }}
+          </span>
+        {% endif %}
+
+        {% render 'bulk-order-row-price', variant: variant, price_class: 'hidden-mobile-up' %}
+      </div>
+    </div>
+  </td>
+
+  <td class="bulk-variant-item-totals text-end hidden-mobile-up">
+    {{- cart | line_items_for: variant | sum: 'original_line_price' | money -}}
+  </td>
+
+  <td class="bulk-variant-item-quantity">
+    {% if variant and variant.available %}
+      <div class="bulk-variant-item-quantity-container">
+        {% render 'variant-quantity-popover', variant: variant %}
+        {% render 'quantity-input-variant', variant: variant, min: 0, reveal_header: false %}
+
+        {% if cart_qty > 0 %}
+          <button
+            class="bulk-order-list-remove-button"
+            data-index="{{ variant.id }}"
+            data-target="remove-{{ variant.id }}"
+            aria-label="{{ 'templates.cart.remove_title' | t: title: item.title }}"
+          >
+            {% render 'icons', icon: 'trash' %}
+          </button>
+        {% endif %}
+      </div>
+    {% else %}
+      <span class="bulk-variant-out-of-stock">
+        {{- 'products.product.availability.out_of_stock' | t -}}
+      </span>
+    {% endif %}
+  </td>
+
+  <td class="bulk-variant-item-price text-end hidden-mobile">
+    {% render 'bulk-order-row-price', variant: variant %}
+  </td>
+
+  <td class="bulk-variant-item-totals text-end hidden-mobile">
+    {{- cart | line_items_for: variant | sum: 'original_line_price' | money -}}
+  </td>
+</tr>

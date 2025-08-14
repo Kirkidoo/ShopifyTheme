@@ -1,0 +1,119 @@
+<ul class="list-inline-menu list-social" role="list">
+  {% if settings.social_link_bandcamp != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_bandcamp }}">
+        {% render 'icons', icon: 'bandcamp' %}
+        <span class="visually-hidden">{{ 'general.social.links.bandcamp' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_discord != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_discord }}">
+        {% render 'icons', icon: 'discord' %}
+        <span class="visually-hidden">{{ 'general.social.links.discord' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_facebook != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_facebook }}">
+        {% render 'icons', icon: 'facebook' %}
+        <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_instagram != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_instagram }}">
+        {% render 'icons', icon: 'instagram' %}
+        <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_linkedin != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_linkedin }}">
+        {% render 'icons', icon: 'linkedin' %}
+        <span class="visually-hidden">{{ 'general.social.links.linkedin' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_pinterest != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_pinterest }}">
+        {% render 'icons', icon: 'pinterest' %}
+        <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_snapchat != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_snapchat }}">
+        {% render 'icons', icon: 'snapchat' %}
+        <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_spotify != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_spotify }}">
+        {% render 'icons', icon: 'spotify' %}
+        <span class="visually-hidden">{{ 'general.social.links.spotify' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_tiktok != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_tiktok }}">
+        {% render 'icons', icon: 'tiktok' %}
+        <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_tumblr != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_tumblr }}">
+        {% render 'icons', icon: 'tumblr' %}
+        <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_twitter != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_twitter }}">
+        {% render 'icons', icon: 'x' %}
+        <span class="visually-hidden">{{ 'general.social.links.x' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_vimeo != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_vimeo }}">
+        {% render 'icons', icon: 'vimeo' %}
+        <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_youtube != blank %}
+    <li class="list-social-item">
+      <a class="list-social-link" href="{{ settings.social_link_youtube }}">
+        {% render 'icons', icon: 'youtube' %}
+        <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_link_whatsapp != blank %}
+    <li class="list-social-item">
+      <a
+        class="list-social-link"
+        href="https://wa.me/{{ settings.social_link_whatsapp }}"
+        target="_blank"
+        rel="noopener"
+      >
+        {% render 'icons', icon: 'whatsapp' %}
+        <span class="visually-hidden">{{ 'general.social.links.whatsapp' | t }}</span>
+      </a>
+    </li>
+  {% endif %}
+</ul>

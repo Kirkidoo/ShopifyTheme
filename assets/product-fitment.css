@@ -1,0 +1,271 @@
+/* --- Product Fitment Section --- */
+
+/* --- Enhanced Wrapper Styles --- */
+.product-fitment-wrapper {
+  max-width: 1170px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.product-fitment-section {
+  font-family: var(--font-body-family, sans-serif);
+  color: var(--color-foreground, #333);
+}
+
+/* --- Enhanced Title --- */
+.product-fitment__title {
+  font-size: var(--font-heading-scale, 1.4)rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: var(--color-accent-1, #004FC7);
+  text-align: center;
+}
+
+/* --- Filter Input Styles --- */
+.product-fitment__filter-container {
+  margin-bottom: 20px; /* Space below filter */
+  padding: 0 10px; /* Align padding with list padding */
+}
+
+.product-fitment__filter-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ced4da; /* Standard border */
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding and border in width */
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.product-fitment__filter-input:focus {
+  border-color: var(--color-accent-1, #004FC7); /* Highlight border on focus */
+  box-shadow: 0 0 0 2px rgba(0, 79, 199, 0.2); /* Subtle focus glow */
+  outline: none;
+}
+
+/* --- Content Area --- */
+.product-fitment__content {
+  position: relative;
+  min-height: 60px;
+}
+
+/* --- Enhanced Loading State --- */
+.product-fitment__loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: #777;
+  min-height: 100px; /* Ensure space for spinner */
+}
+
+.product-fitment__loading::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--color-accent-1, #004FC7);
+  border-radius: 50%;
+  animation: product-fitment-spin 1s linear infinite;
+}
+
+@keyframes product-fitment-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.product-fitment-section[data-loading="false"] .product-fitment__loading {
+  display: none;
+}
+
+/* --- Enhanced Error Message --- */
+.product-fitment__error,
+.product-fitment__error-message {
+  color: #a94442;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 12px 18px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* --- Enhanced Results Area --- */
+.product-fitment__results {
+  margin-top: 0; /* Remove top margin as filter has bottom margin */
+}
+
+/* --- Empty/No Match States --- */
+.product-fitment__results--empty,
+.product-fitment__results--no-match {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  margin: 0 10px; /* Match list padding */
+}
+
+/* --- Enhanced Results List --- */
+.product-fitment__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 10px; /* Add horizontal margin to align with filter padding */
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.product-fitment__list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.product-fitment__list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.product-fitment__list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.product-fitment__list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* --- Enhanced List Items (Default/Desktop) --- */
+.product-fitment__list-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid #f1f1f1;
+  transition: background-color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-fitment__list-item:last-child {
+  border-bottom: none;
+}
+
+.product-fitment__list-item:nth-child(even) {
+  background-color: #fcfcfc;
+}
+
+.product-fitment__list-item:hover {
+  background-color: #e9f2ff;
+}
+
+.product-fitment__make {
+  font-weight: 600;
+  color: #343a40;
+  flex-shrink: 0; /* Prevent make from shrinking on desktop */
+}
+
+.product-fitment__model {
+  margin-left: 0;
+  flex-grow: 1; /* Allow model to take available space on desktop */
+  color: #495057;
+}
+
+.product-fitment__years {
+  margin-left: 0;
+  color: #6c757d;
+  font-size: 0.85em;
+  background-color: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* --- Mobile Specific Styles --- */
+/* Using 749px as a common Shopify mobile breakpoint */
+@media (max-width: 749px) {
+  .product-fitment-wrapper {
+    /* Reduce padding slightly on mobile */
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .product-fitment__title {
+      font-size: var(--font-heading-scale, 1.2)rem; /* Slightly smaller title on mobile */
+      margin-bottom: 15px;
+  }
+
+  .product-fitment__filter-container {
+      padding: 0 5px; /* Reduce padding */
+      margin-bottom: 15px;
+  }
+
+  .product-fitment__list {
+      margin: 0 5px; /* Reduce margin */
+      max-height: 300px; /* Adjust max height if needed */
+  }
+
+  .product-fitment__list-item {
+    /* Stack elements vertically */
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    gap: 4px; /* Reduce gap for vertical stacking */
+    padding: 12px 10px; /* Adjust padding */
+  }
+
+  .product-fitment__make {
+    /* Make takes full width potentially */
+    flex-shrink: 1; /* Allow shrinking if needed */
+    margin-bottom: 2px; /* Small space below make */
+  }
+
+  .product-fitment__model {
+    /* Model takes full width */
+    flex-grow: 0; /* Reset flex-grow */
+    margin-bottom: 4px; /* Space below model */
+    line-height: 1.3; /* Improve readability if model wraps */
+  }
+
+  .product-fitment__years {
+    /* Optional: Remove background for cleaner mobile look */
+    background-color: transparent;
+    padding: 0;
+    font-size: 0.8em; /* Slightly smaller */
+    /* Optional: Add margin-top if needed */
+  }
+}
+
+
+/* Hide section if hide_if_empty is true and no results */
+.product-fitment-wrapper[data-fitment-empty="true"][data-hide-if-empty="true"] {
+  display: none;
+}
+
+/* Helper class for screen readers */
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap; /* Prevent line breaks */
+}

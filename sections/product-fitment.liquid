@@ -1,0 +1,128 @@
+    {{ 'product-fitment.css' | asset_url | stylesheet_tag }}
+    {% comment %}
+      Section: Product Fitment Display
+      Purpose: Displays vehicle fitment information for the current product
+               using the Gamma Powersports API. Includes filtering.
+      Requires:
+      - Global Theme Settings for 'gamma_api_base_url' and 'gamma_api_token'.
+      - product-fitment.css for styling.
+      - product-fitment.js for API interaction and filtering.
+      - Assumes product.selected_or_first_available_variant.sku contains the Gamma part number.
+        ** Adjust the 'part_number' variable below if your part number is stored elsewhere (e.g., metafield) **
+    {% endcomment %}
+
+
+    {% comment %} Get API credentials from global Theme Settings {% endcomment %}
+    {%- assign base_url = settings.gamma_api_base_url | default: "https://api.gammapowersports.com" -%}
+    {%- assign api_token = settings.gamma_api_token -%}
+    {%- assign fitment_endpoint = base_url | append: '/item/getFitmentMachines' -%}
+
+    {% comment %}
+      Attempt to get the part number from the product's SKU.
+      ** IMPORTANT: Change this line if your part number is stored differently! **
+      Examples:
+      - If using a variant metafield: product.selected_or_first_available_variant.metafields.custom.part_number
+      - If using a product metafield: product.metafields.custom.part_number
+    {% endcomment %}
+    {%- assign part_number = product.selected_or_first_available_variant.sku | default: product.variants[0].sku -%}
+
+    {%- liquid
+      assign section_id = section.id
+      assign section_title = section.settings.title
+      assign hide_if_empty = section.settings.hide_if_empty
+      assign filter_placeholder = section.settings.filter_placeholder | default: "Filter by Make, Model, or Year..."
+    -%}
+
+    <div
+      class="product-fitment-section"
+      id="product-fitment-{{ section_id }}"
+      data-section-id="{{ section_id }}"
+      data-api-endpoint="{{ fitment_endpoint }}"
+      data-api-token="{{ api_token | escape }}"
+      data-part-number="{{ part_number | escape }}"
+      data-hide-if-empty="{{ hide_if_empty }}"
+      {% if api_token == blank or part_number == blank %}data-init-error="true"{% endif %}
+    >
+      {% if section_title != blank %}
+        <h2 class="product-fitment__title">{{ section_title | escape }}</h2>
+      {% endif %}
+
+      {% comment %} Added Filter Input - Only show if API token and part number are present {% endcomment %}
+      {% if api_token != blank and part_number != blank %}
+        <div class="product-fitment__filter-container">
+          <label for="fitment-filter-{{ section_id }}" class="visually-hidden">Filter Fitments</label>
+          <input
+            type="text"
+            id="fitment-filter-{{ section_id }}"
+            class="product-fitment__filter-input"
+            placeholder="{{ filter_placeholder | escape }}"
+            aria-controls="product-fitment-results-list-{{ section_id }}"
+          >
+        </div>
+      {% endif %}
+
+      <div class="product-fitment__content">
+        {% if api_token == blank %}
+          <p class="product-fitment__error">
+            API Token is missing. Please configure it in Theme Settings > API Integrations.
+          </p>
+        {% elsif part_number == blank %}
+          <p class="product-fitment__error">
+            Could not determine the part number for this product.
+          </p>
+        {% else %}
+          {% comment %} Loading indicator - shown by default via CSS, hidden by JS {% endcomment %}
+          <div class="product-fitment__loading">
+            {% comment %} Spinner added via CSS ::before pseudo-element {% endcomment %}
+          </div>
+
+          {% comment %} Error message area - hidden by default, shown by JS {% endcomment %}
+          <div class="product-fitment__error-message" style="display: none;" role="alert"></div>
+
+          {% comment %} Results area - populated by JS {% endcomment %}
+          <div class="product-fitment__results">
+            {% comment %} Fitment list will be injected here by JavaScript {% endcomment %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+
+    {% schema %}
+    {
+      "name": "Product Fitment",
+      "tag": "section",
+      "class": "product-fitment-wrapper",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Section Title",
+          "default": "Vehicle Fitment"
+        },
+        {
+          "type": "text",
+          "id": "filter_placeholder",
+          "label": "Filter Input Placeholder Text",
+          "default": "Filter by Make, Model, or Year..."
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_if_empty",
+          "label": "Hide section if no fitment data found",
+          "default": false,
+          "info": "If checked, the entire section will be hidden if the API returns no compatible vehicles initially."
+        },
+        {
+            "type": "paragraph",
+            "content": "Requires 'API Base URL' and 'API Bearer Token' to be set in Theme Settings > API Integrations. Assumes the product variant SKU is the part number."
+        }
+      ],
+      "presets": [
+        {
+          "name": "Product Fitment"
+        }
+      ]
+    }
+    {% endschema %}
+    

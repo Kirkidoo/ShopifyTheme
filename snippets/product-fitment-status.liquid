@@ -1,0 +1,29 @@
+{{ 'product-fitment-status.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Snippet for rendering the product fitment status block.
+
+  Accepts:
+  - block: {Object} The block object from the section.
+  - product: {Object} The product object.
+{% endcomment %}
+
+{%- liquid
+  assign sku = product.selected_or_first_available_variant.sku | default: product.first_available_variant.sku
+  assign section_id_for_js = block.id | default: section.id | append: '-fitment-status'
+-%}
+
+<div
+  class="product-fitment-status-container"
+  data-section-id="{{ section_id_for_js }}"
+  data-api-token="{{ settings.gamma_api_token | escape }}"
+  data-api-base-url="{{ settings.gamma_api_base_url | escape }}"
+  data-product-sku="{{ sku | escape }}"
+  data-fits-message="{{ block.settings.fits_message | escape }}"
+  data-does-not-fit-message="{{ block.settings.does_not_fit_message | escape }}"
+  data-no-vehicle-selected-message="{{ block.settings.no_vehicle_selected_message | escape }}"
+  data-api-error-message="{{ block.settings.api_error_message | escape }}"
+>
+  <p class="fitment-status-placeholder">{{ block.settings.no_vehicle_selected_message | escape }}</p>
+</div>
+
+<script src="{{ 'product-fitment-status.js' | asset_url }}" defer="defer"></script>

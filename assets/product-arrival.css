@@ -1,0 +1,38 @@
+/* --- Product Arrival Dates --- */
+.product-arrival-section-wrapper .lds-dual-ring {
+  display: inline-block;
+  width: 20px; /* Smaller size */
+  height: 20px;
+}
+.product-arrival-section-wrapper .lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 16px; /* Adjust size */
+  height: 16px;
+  margin: 2px; /* Adjust margin */
+  border-radius: 50%;
+  border: 3px solid #555; /* Thinner border */
+  border-color: #555 transparent #555 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* Add basic styling for standard/compact layouts if needed */
+.product-arrival-section-wrapper .product-arrival-dates--standard .arrival-dates-list { list-style: none; padding: 0; margin: 10px 0; }
+.product-arrival-section-wrapper .product-arrival-dates--standard .arrival-date-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
+.product-arrival-section-wrapper .product-arrival-dates--standard .arrival-date-item:last-child { border-bottom: none; }
+.product-arrival-section-wrapper .product-arrival-dates--standard .arrival-status .confirmed { color: green; font-weight: bold; }
+.product-arrival-section-wrapper .product-arrival-dates--standard .arrival-status .estimated { color: orange; }
+
+.product-arrival-section-wrapper .product-arrival-dates--compact .arrival-dates-subtle__list { list-style: none; padding: 0; margin: 5px 0; }
+.product-arrival-section-wrapper .product-arrival-dates--compact .arrival-dates-subtle__item { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 0.9em; }
+ .product-arrival-section-wrapper .product-arrival-dates--compact .arrival-dates-subtle__status .confirmed { color: green; font-weight: bold; }
+.product-arrival-section-wrapper .product-arrival-dates--compact .arrival-dates-subtle__status .estimated { color: orange; }
+.product-arrival-section-wrapper .product-arrival-dates--compact .arrival-dates-subtle__toggle { background: none; border: none; color: var(--color-accent-1, #004FC7); text-decoration: underline; cursor: pointer; padding: 5px 0; font-size: 0.9em; }
+.product-arrival-section-wrapper .product-arrival-dates--compact .arrival-dates-subtle__note { font-size: 0.85em; color: #666; margin-top: 5px; }

@@ -1,0 +1,73 @@
+{% comment %}
+  Renders the product's custom properties
+
+  Accepts:
+  - product: {Object} The product.
+  - block: {Object} The
+  - settings: {Object} The settings.
+  - product_form_id: {String} The associated product's form ID. Required.
+
+  Usage:
+  {% render 'main-product-personalization-fields', product: product, block: block, position: 'right' %}
+{% endcomment %}
+
+{% liquid
+  assign input_id = 'product-property-' | append: section.id | append: '-' | append: block.id
+%}
+
+<div
+  class="product-custom-property-block color-{{ settings.color_scheme }}"
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="
+      product-custom-property
+      product-custom-property-{{ section.id }}-{{ block.id }}
+      product-{{ block.type }}
+      {% if product.selected_or_first_available_variant == null %}visually-hidden{% endif %}
+    "
+  >
+    {% case block.type %}
+      {% when 'personalization_text' %}
+        {% if settings.name %}
+          {% if settings.title %}
+            <label class="field-label" for="{{ input_id }}">{{ settings.title }}</label>
+          {% else %}
+            <label for="{{ input_id }}" class="visually-hidden">{{ settings.name }}</label>
+          {% endif %}
+
+          <input
+            type="{{ settings.type }}"
+            id="{{ input_id }}"
+            name="properties[{{ settings.name | escape }}]"
+            class="product-custom-property-field property-{{ settings.type }}"
+            placeholder="{{ settings.placeholder | escape }}"
+            form="{{ product_form_id }}"
+            {% if settings.default_value %}
+              value="{{ settings.default_value | escape }}"
+            {% endif %}
+            {% if settings.minlength > 0 %}
+              minlength="{{ settings.minlength }}"
+            {% endif %}
+            {% if settings.maxlength > 0 %}
+              maxlength="{{ settings.maxlength }}"
+            {% endif %}
+            {% if settings.type == 'number' %}
+              {% if settings.min > 0 %}
+                min="{{ settings.min }}"
+              {% endif %}
+              {% if settings.max > 0 %}
+                min="{{ settings.max }}"
+              {% endif %}
+            {% endif %}
+          >
+
+          {% if settings.description != blank %}
+            <div class="product-custom-property-description rte">
+              <p>{{ settings.description }}</p>
+            </div>
+          {% endif %}
+        {% endif %}
+    {% endcase %}
+  </div>
+</div>

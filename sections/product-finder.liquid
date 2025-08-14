@@ -1,0 +1,149 @@
+{{ 'product-finder.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Updated Liquid file for Vehicle Fitment Selector.
+  - Retrieves API credentials (Base URL, Token) from global Theme Settings (settings object).
+  - Removed API credential settings from the section schema.
+  - Wrapped main content in a <form> tag for semantic improvement.
+{% endcomment %}
+
+
+{% comment %} Get API credentials from global Theme Settings {% endcomment %}
+{% assign global_api_base_url = settings.gamma_api_base_url | default: "https://api.gammapowersports.com" %}
+{% assign global_api_token = settings.gamma_api_token %}
+
+{% comment %} Get section-specific settings {% endcomment %}
+{% assign enable_toggle = section.settings.enable_toggle %}
+
+<div
+  class="fitment-selector-section {% if enable_toggle %}fitment-collapsible{% endif %}"
+  id="gamma-fitment-selector-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-api-base-url="{{ global_api_base_url }}"
+  data-api-token="{{ global_api_token | escape }}"
+  data-api-get-types="{{ global_api_base_url }}/fitment/getTypeOptions"
+  data-api-get-categories="{{ global_api_base_url }}/fitment/getFitmentCategories"
+  data-api-get-makes="{{ global_api_base_url }}/fitment/getMakeOptions"
+  data-api-get-years="{{ global_api_base_url }}/fitment/getYearOptions"
+  data-api-get-models="{{ global_api_base_url }}/fitment/getModelOptions"
+  data-api-get-products="{{ global_api_base_url }}/fitment/getFitmentProducts"
+  {% if enable_toggle %}data-toggle-enabled="true"{% endif %}
+>
+  <div class="fitment-header">
+    {% if section.settings.title != blank %}
+      <h2 class="fitment-selector-title">{{ section.settings.title | escape }}</h2>
+    {% endif %}
+
+    {% if enable_toggle %}
+      <button
+        type="button"
+        class="fitment-toggle-button"
+        aria-controls="fitment-content-{{ section.id }}"
+        aria-expanded="false" {% comment %} JS sets initial state based on localStorage/CSS and updates aria-expanded {% endcomment %}
+      >
+        <span class="toggle-text-show">Show</span>
+        <span class="toggle-text-hide">Hide</span>
+        <svg class="toggle-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </button>
+    {% endif %}
+  </div>
+
+  {% comment %} Check if the GLOBAL API token is blank {% endcomment %}
+  {% if global_api_token == blank %}
+    <p class="fitment-error">API Token is missing. Please configure it in the Theme Settings under API Integrations.</p>
+  {% else %}
+    <div class="fitment-content-wrapper" id="fitment-content-{{ section.id }}">
+      {% comment %}
+        Using a form tag for better semantics, even though submission is handled by JS.
+        The novalidate attribute prevents default browser validation, as we handle it via JS.
+      {% endcomment %}
+      <form class="fitment-form" onsubmit="return false;" novalidate>
+        <div class="fitment-selectors-container">
+          {% comment %} 1. Type Selector {% endcomment %}
+          <div class="fitment-selector">
+            <label for="fitment-type-{{ section.id }}">Machine Type</label>
+            <select id="fitment-type-{{ section.id }}" name="fitment_type" class="fitment-select fitment-type-select" aria-describedby="fitment-type-loading-{{ section.id }}">
+              <option value="" selected disabled>-- Select Type --</option>
+            </select>
+            <span id="fitment-type-loading-{{ section.id }}" class="fitment-loading fitment-type-loading" style="display: none;"><span class="fitment-spinner"></span></span>
+          </div>
+          {% comment %} 2. Category Selector {% endcomment %}
+          <div class="fitment-selector">
+            <label for="fitment-category-{{ section.id }}">Category</label>
+            <select id="fitment-category-{{ section.id }}" name="fitment_category" class="fitment-select fitment-category-select" disabled aria-describedby="fitment-category-loading-{{ section.id }}">
+              <option value="" selected disabled>-- Select Category --</option>
+            </select>
+            <span id="fitment-category-loading-{{ section.id }}" class="fitment-loading fitment-category-loading" style="display: none;"><span class="fitment-spinner"></span></span>
+          </div>
+          {% comment %} 3. Make Selector {% endcomment %}
+          <div class="fitment-selector">
+            <label for="fitment-make-{{ section.id }}">Make</label>
+            <select id="fitment-make-{{ section.id }}" name="fitment_make" class="fitment-select fitment-make-select" disabled aria-describedby="fitment-make-loading-{{ section.id }}">
+              <option value="" selected disabled>-- Select Make --</option>
+            </select>
+             <span id="fitment-make-loading-{{ section.id }}" class="fitment-loading fitment-make-loading" style="display: none;"><span class="fitment-spinner"></span></span>
+          </div>
+          {% comment %} 4. Year Selector {% endcomment %}
+          <div class="fitment-selector">
+            <label for="fitment-year-{{ section.id }}">Year</label>
+            <select id="fitment-year-{{ section.id }}" name="fitment_year" class="fitment-select fitment-year-select" disabled aria-describedby="fitment-year-loading-{{ section.id }}">
+              <option value="" selected disabled>-- Select Year --</option>
+            </select>
+             <span id="fitment-year-loading-{{ section.id }}" class="fitment-loading fitment-year-loading" style="display: none;"><span class="fitment-spinner"></span></span>
+          </div>
+          {% comment %} 5. Model Selector {% endcomment %}
+          <div class="fitment-selector">
+            <label for="fitment-model-{{ section.id }}">Model</label>
+            <select id="fitment-model-{{ section.id }}" name="fitment_model" class="fitment-select fitment-model-select" disabled aria-describedby="fitment-model-loading-{{ section.id }}">
+              <option value="" selected disabled>-- Select Model --</option>
+            </select>
+             <span id="fitment-model-loading-{{ section.id }}" class="fitment-loading fitment-model-loading" style="display: none;"><span class="fitment-spinner"></span></span>
+          </div>
+        </div>
+
+        <div class="fitment-actions">
+          <button id="fitment-find-parts-{{ section.id }}" class="fitment-button fitment-find-button" type="button" disabled>
+            <span class="button--text">Find Parts</span>
+            <span class="fitment-loading fitment-search-loading" style="display: none;">
+              <span class="fitment-spinner"></span>
+            </span>
+          </button>
+          <button id="fitment-reset-{{ section.id }}" class="fitment-button fitment-reset-button" type="button">Reset</button>
+        </div>
+      </form>
+
+      <div id="fitment-results-{{ section.id }}" class="fitment-results-container" aria-live="polite">
+        <p>Please select your vehicle details above to find compatible parts.</p>
+      </div>
+
+      <div id="fitment-error-message-{{ section.id }}" class="fitment-error-message" style="display: none;" role="alert">
+      </div>
+
+    </div>
+  {% endif %}
+
+</div>
+
+{% comment %}
+  Scripts (like product-finder.js and Choices.js) are typically loaded globally via theme.liquid.
+  For optimal performance, ensure they are loaded with the `defer` attribute.
+  Example: <script src="{{ 'product-finder.js' | asset_url }}" defer></script>
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Vehicle Fitment Selector",
+  "tag": "section",
+  "class": "fitment-selector-wrapper",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Section Title", "default": "Find Parts for Your Vehicle" },
+    { "type": "header", "content": "API Configuration Note" },
+    { "type": "paragraph", "content": "API credentials (Base URL, Token for the fitment data source) are configured globally under Theme Settings > API Integrations." },
+    { "type": "header", "content": "Visibility Toggle" },
+    { "type": "checkbox", "id": "enable_toggle", "label": "Make Section Collapsible", "default": false, "info": "Adds a button to show/hide the fitment selector content. Open on desktop, closed on mobile by default. Remembers user preference." }
+  ],
+  "presets": [ { "name": "Vehicle Fitment Selector" } ]
+}
+{% endschema %}

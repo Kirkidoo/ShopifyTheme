@@ -1,0 +1,341 @@
+{% comment %}
+  Renders the site's main menu
+
+  Accepts:
+  - menu: {Object} Menu (linklist) object
+  - blocks: {Array} Section blocks array for mega menu. Optional
+  - align_right: {Boolean} Right-aligns the menu when true. Optional. Default: false
+
+  Usage:
+  {% render 'header-main-menu', menu: main_menu, blocks: section.blocks, aligh_right: true %}
+{% endcomment %}
+{% capture shared_styles %}
+  <!-- Shared styles for products and collections -->
+  <style>
+    .mega-menu-column-item-grid {
+      display: grid;
+      grid-auto-flow: row;
+      gap: 1.5rem;
+      align-content: start;
+    }
+
+    .mega-menu-item-list {
+      width: 30rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mega-menu-item-list-collections .mega-menu-item {
+      align-items: center;
+    }
+
+    .mega-menu-item {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .mega-menu-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .mega-menu-item-image {
+      width: 4.8rem;
+      flex-shrink: 0;
+      height: auto;
+    }
+
+    .mega-menu-item-image img {
+      border-radius: var(--border-radius-base);
+      border: solid 1px rgba(var(--color-border));
+      padding: 0.3rem;
+    }
+
+    .mega-menu-item-title {
+      font-size: calc(var(--font-body-scale) * 1.3rem);
+    }
+
+    .mega-menu-item-title a {
+      color: currentColor;
+    }
+  </style>
+{% endcapture %}
+
+{% liquid
+  # Only output the shared styles once.
+  assign print_shared_styles = false
+  for link in menu.links
+    for block in blocks
+      if block.type == 'megamenu' and block.settings.menu_item == link.title
+        if block.settings.product_list.count > 0 or block.settings.collection_list.count > 0
+          assign print_shared_styles = true
+        endif
+      endif
+    endfor
+  endfor
+%}
+{% if print_shared_styles %}{{ shared_styles }}{% endif %}
+
+<ul
+  class="navigation-menu navigation-main {% if align_right %} navigation-menu-end {% endif %}"
+  role="list"
+>
+  {%- for link in menu.links -%}
+    {% liquid
+      assign is_mega = false
+      for block in blocks
+        if block.type == 'megamenu' and block.settings.menu_item == link.title
+          assign is_mega = true
+
+          assign is_mega_compact = false
+          if block.settings.show_compact_banners == true
+            assign is_mega_compact = true
+          endif
+
+          assign mega_block = block
+          assign has_side_item_1 = false
+          assign has_side_item_2 = false
+          assign has_side_item_3 = false
+          assign has_side_item_4 = false
+          assign side_item_count = 0
+
+          if mega_block.settings.side_image != blank or mega_block.settings.side_title != blank or mega_block.settings.side_text != blank
+            assign has_side_item_1 = true
+          endif
+          if mega_block.settings.side_image_2 != blank or mega_block.settings.side_title_2 != blank or mega_block.settings.side_text_2 != blank
+            assign has_side_item_2 = true
+          endif
+          if mega_block.settings.side_image_3 != blank or mega_block.settings.side_title_3 != blank or mega_block.settings.side_text_3 != blank
+            assign has_side_item_3 = true
+          endif
+          if mega_block.settings.side_image_4 != blank or mega_block.settings.side_title_4 != blank or mega_block.settings.side_text_4 != blank
+            assign has_side_item_4 = true
+          endif
+
+          if has_side_item_1
+            assign side_item_count = side_item_count | plus: 1
+          endif
+          if has_side_item_2
+            assign side_item_count = side_item_count | plus: 1
+          endif
+          if has_side_item_3
+            assign side_item_count = side_item_count | plus: 1
+          endif
+          if has_side_item_4
+            assign side_item_count = side_item_count | plus: 1
+          endif
+        endif
+      endfor
+    %}
+
+    <li
+      class="
+        navigation-item
+        {% if forloop.first and align_right %} navigation-item-end {% endif %}
+        {% if is_mega %} navigation-item-static {% endif %}
+        {% if link.links != blank or is_mega %} has-sub-menu {% endif %}
+        {% if is_mega and is_mega_compact == false and side_item_count > 2 or link.links == blank %} navigation-mega-sides{% endif %}
+      "
+    >
+      <a
+        href="{{ link.url }}"
+        {%- if link.current -%}
+          aria-current="page" class="current"
+        {%- endif -%}
+      >
+        {{ link.title | escape }}
+        {%- if link.links != blank or is_mega -%}
+          {% render 'icons', icon: 'angle' %}
+        {%- endif -%}
+
+        {% for block in blocks %}
+          {% if block.type == 'badge'
+            and block.settings.badge_menu_item == link.title
+            and block.settings.label != empty
+          %}
+            <span
+              class="menu-badge"
+              style="color: {{ block.settings.text_color }}; background-color: {{ block.settings.background_color }};"
+            >
+              {{ block.settings.label }}
+              <span
+                class="menu-badge-arrow"
+                style="border-top-color: {{ block.settings.background_color }};"
+              ></span>
+            </span>
+          {% endif %}
+        {% endfor %}
+      </a>
+
+      {% if is_mega %}
+        <div class="navigation-sub-menu mega-menu mega-menu-feature-{{ mega_block.settings.side_position }} color-{{ section.settings.navigation_submenu_color_scheme }}">
+          <div class="container">
+            <div class="mega-menu-container {% if is_mega_compact %} mega-menu-container-compact {% endif %}">
+              {% if link.links != blank %}
+                <div class="mega-menu-columns">
+                  {%- for childlink in link.links -%}
+                    <div class="mega-menu-column">
+                      <a
+                        href="{{ childlink.url }}"
+                        class="mega-menu-column-title {% if childlink.current %} current {% endif %}"
+                        {%- if childlink.current -%}
+                          aria-current="page"
+                        {%- endif -%}
+                      >
+                        {{- childlink.title | escape -}}
+                      </a>
+                      {%- if childlink.links != blank -%}
+                        <ul class="mega-menu-column-list">
+                          {%- for grandchildlink in childlink.links -%}
+                            <li class="navigation-item">
+                              <a
+                                href="{{ grandchildlink.url }}"
+                                {%- if grandchildlink.current -%}
+                                  aria-current="page" class="current"
+                                {%- endif -%}
+                              >
+                                {{ grandchildlink.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% liquid
+                if mega_block.settings.product_list.count > 0
+                  assign has_products = true
+                endif
+                if mega_block.settings.collection_list.count > 0
+                  assign has_collections = true
+                endif
+                if side_item_count > 0
+                  assign has_banners = true
+                endif
+              %}
+
+              {% if has_products or has_collections %}
+                <div class="mega-menu-column-feature-grid mega-menu-column-item-grid">
+                  {% if mega_block.settings.side_items_heading != blank %}
+                    <div class="mega-menu-side-items-heading">
+                      {{ mega_block.settings.side_items_heading }}
+                    </div>
+                  {% endif %}
+
+                  {% if has_products %}
+                    <!-- Show products -->
+                    <ul class="mega-menu-item-list">
+                      {% for product in mega_block.settings.product_list %}
+                        {%- assign featured_media = product.featured_media
+                          | default: settings.product_placeholder_image
+                        -%}
+                        <li class="mega-menu-item">
+                          {% if featured_media %}
+                            <div class="mega-menu-item-image">
+                              {{
+                                featured_media
+                                | image_url: width: 80, height: 80
+                                | image_tag: loading: lazy
+                              }}
+                            </div>
+                          {% endif %}
+                          <div class="mega-menu-item-title">
+                            <a href="{{ product.url }}" title="{{ product.title }}">
+                              {{ product.title }}
+                            </a>
+                          </div>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% elsif has_collections %}
+                    <!-- Show collections -->
+                    <ul class="mega-menu-item-list mega-menu-item-list-collections">
+                      {% for collection in mega_block.settings.collection_list %}
+                        <li class="mega-menu-item">
+                          <div class="mega-menu-item-image">
+                            {{
+                              collection.featured_image
+                              | image_url: width: 80, height: 80
+                              | image_tag: loading: lazy
+                            }}
+                          </div>
+                          <div class="mega-menu-item-title">
+                            <a href="{{ collection.url }}" title="{{ collection.title }}">
+                              {{ collection.title }}
+                            </a>
+                          </div>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% elsif has_banners %}
+                <!-- Show banners -->
+                <div class="mega-menu-column-feature-grid {% if is_mega_compact %} mega-menu-column-feature-grid-compact {% endif %}">
+                  {% liquid
+                    if has_side_item_1
+                      render 'mega-menu-side-item', url: mega_block.settings.side_url, image: mega_block.settings.side_image, title: mega_block.settings.side_title, text: mega_block.settings.side_text
+                    endif
+                    if has_side_item_2
+                      render 'mega-menu-side-item', url: mega_block.settings.side_url_2, image: mega_block.settings.side_image_2, title: mega_block.settings.side_title_2, text: mega_block.settings.side_text_2
+                    endif
+                    if has_side_item_3
+                      render 'mega-menu-side-item', url: mega_block.settings.side_url_3, image: mega_block.settings.side_image_3, title: mega_block.settings.side_title_3, text: mega_block.settings.side_text_3
+                    endif
+                    if has_side_item_4
+                      render 'mega-menu-side-item', url: mega_block.settings.side_url_4, image: mega_block.settings.side_image_4, title: mega_block.settings.side_title_4, text: mega_block.settings.side_text_4
+                    endif
+                  %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      {% else %}
+        {%- if link.links != blank -%}
+          <ul class="navigation-sub-menu color-{{ section.settings.navigation_submenu_color_scheme }}">
+            {%- for childlink in link.links -%}
+              <li class="navigation-item {% if childlink.links != blank %} has-sub-menu {% endif %}">
+                <a
+                  href="{{ childlink.url }}"
+                  {%- if childlink.current -%}
+                    aria-current="page" class="current"
+                  {%- endif -%}
+                >
+                  {{ childlink.title | escape }}
+                  {%- if childlink.links != blank -%}
+                    {% render 'icons', icon: 'angle' %}
+                  {%- endif -%}
+                </a>
+
+                {%- if childlink.links != blank -%}
+                  <ul class="navigation-sub-menu">
+                    {%- for grandchildlink in childlink.links -%}
+                      <li class="navigation-item {% if grandchildlink.links != blank %} has-sub-menu {% endif %}">
+                        <a
+                          href="{{ grandchildlink.url }}"
+                          {%- if grandchildlink.current -%}
+                            aria-current="page" class="current"
+                          {%- endif -%}
+                        >
+                          {{ grandchildlink.title | escape }}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      {% endif %}
+    </li>
+  {%- endfor -%}
+</ul>
