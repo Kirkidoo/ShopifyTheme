@@ -234,7 +234,7 @@
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-    {{ 'choices.min.js' | asset_url | script_tag }}
+    <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js" defer="defer"></script>
 {{ 'product-finder.js' | asset_url | script_tag }}
 {{ 'product-fitment.js' | asset_url | script_tag }}
 {{ 'product-arrival-dates.js' | asset_url | script_tag }}
