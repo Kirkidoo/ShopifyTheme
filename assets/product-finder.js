@@ -65,7 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionId = section.dataset.sectionId;
     sectionStates[sectionId] = {
       currentActionInProgress: null,
-      storageKey: `${STORAGE_KEY_PREFIX}${sectionId}`
+      storageKey: `${STORAGE_KEY_PREFIX}${sectionId}`,
+      allProducts: [],
+      productCards: [],
     };
     console.log(`Processing section: ${sectionId}`);
 
@@ -84,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const elements = {
         typeSelect: section.querySelector(`#fitment-type-${sectionId}`),
-        categorySelect: section.querySelector(`#fitment-category-${sectionId}`),
         makeSelect: section.querySelector(`#fitment-make-${sectionId}`),
         yearSelect: section.querySelector(`#fitment-year-${sectionId}`),
         modelSelect: section.querySelector(`#fitment-model-${sectionId}`),
@@ -92,9 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resetButton: section.querySelector(`#fitment-reset-${sectionId}`),
         resultsContainer: section.querySelector(`#fitment-results-${sectionId}`),
         errorMessageContainer: section.querySelector(`#fitment-error-message-${sectionId}`),
-        // Note: Loading elements are now just the spinners, controlled by a parent class.
+        filtersContainer: section.querySelector(`#fitment-filters-${sectionId}`),
+        filterCategorySelect: section.querySelector(`#fitment-filter-category-${sectionId}`),
+        filterSubCategorySelect: section.querySelector(`#fitment-filter-subcategory-${sectionId}`),
         typeLoading: section.querySelector('.fitment-type-loading'),
-        categoryLoading: section.querySelector('.fitment-category-loading'),
         makeLoading: section.querySelector('.fitment-make-loading'),
         yearLoading: section.querySelector('.fitment-year-loading'),
         modelLoading: section.querySelector('.fitment-model-loading'),
@@ -103,9 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contentWrapper: section.querySelector('.fitment-content-wrapper'),
     };
 
-    let categoryChoicesInstance = null;
-
-    if (!elements.typeSelect || !elements.categorySelect || !elements.makeSelect || !elements.yearSelect || !elements.modelSelect || !elements.findPartsButton || !elements.resetButton || !elements.resultsContainer || !elements.errorMessageContainer) {
+    if (!elements.typeSelect || !elements.makeSelect || !elements.yearSelect || !elements.modelSelect || !elements.findPartsButton || !elements.resetButton || !elements.resultsContainer || !elements.errorMessageContainer || !elements.filtersContainer) {
         console.error(`Fitment Selector (${sectionId}): Missing essential HTML elements. Initialization aborted.`);
         return;
     }
@@ -213,20 +213,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resetSelect = (selectElement, placeholder, disable = true) => {
       if (!selectElement) return;
+      const placeholderText = placeholder || '-- Select --';
       let placeholderOption = selectElement.querySelector('option[value=""]');
       if (!placeholderOption) {
           placeholderOption = document.createElement('option');
           placeholderOption.value = "";
-          placeholderOption.disabled = true;
-          placeholderOption.textContent = placeholder;
+          placeholderOption.textContent = placeholderText;
       }
+      // For main selectors, placeholder is disabled. For filters, it's not.
+      placeholderOption.disabled = disable;
       selectElement.innerHTML = '';
       selectElement.appendChild(placeholderOption);
       placeholderOption.selected = true;
       selectElement.disabled = disable;
-      if (selectElement === elements.categorySelect) {
-          destroyCategoryChoices();
-      }
     };
 
     const populateSelect = (selectElement, options, valueKey = 'value', textKey = 'text') => {
@@ -247,60 +246,15 @@ document.addEventListener('DOMContentLoaded', () => {
         selectElement.appendChild(optionElement);
       });
       selectElement.disabled = options.length === 0;
-      if (selectElement === elements.categorySelect) {
-          initializeCategoryChoices();
-      }
-    };
-
-    const destroyCategoryChoices = () => {
-        if (categoryChoicesInstance) {
-            try { categoryChoicesInstance.destroy(); } catch(e) { console.error(`Error destroying Choices.js instance:`, e); }
-            categoryChoicesInstance = null;
-        }
-    };
-
-    const initializeCategoryChoices = () => {
-        destroyCategoryChoices();
-        if (typeof Choices !== 'undefined' && elements.categorySelect && elements.categorySelect.options.length > 1) {
-            try {
-                categoryChoicesInstance = new Choices(elements.categorySelect, {
-                    searchEnabled: true,
-                    itemSelectText: '',
-                    shouldSort: false,
-                    placeholder: true,
-                    removeItemButton: false,
-                    searchPlaceholderValue: "Type to filter categories...",
-                    shouldCloseOnSelect: true, // Explicitly set to close on select
-                    fuseOptions: {
-                        threshold: 0.3,
-                        ignoreLocation: true,
-                        keys: ['label', 'value']
-                    }
-                });
-
-                // Add event listener to focus search input on dropdown open
-                elements.categorySelect.addEventListener('showDropdown', function() {
-                    const searchInput = elements.categorySelect.closest('.fitment-selector').querySelector('.choices__input--cloned');
-                    if (searchInput) {
-                        searchInput.focus();
-                    }
-                });
-
-                elements.categorySelect.disabled = false;
-            } catch (e) {
-                console.error(`Error initializing Choices.js:`, e);
-            }
-        }
     };
 
     const resetSubsequentDropdowns = (currentLevel) => {
-      const levels = ['type', 'category', 'make', 'year', 'model'];
+      const levels = ['type', 'make', 'year', 'model'];
       const startIndex = levels.indexOf(currentLevel) + 1;
       for (let i = startIndex; i < levels.length; i++) {
         const level = levels[i];
         let selectElement, placeholder;
         switch (level) {
-          case 'category': selectElement = elements.categorySelect; placeholder = PLACEHOLDERS.CATEGORY; break;
           case 'make': selectElement = elements.makeSelect; placeholder = PLACEHOLDERS.MAKE; break;
           case 'year': selectElement = elements.yearSelect; placeholder = PLACEHOLDERS.YEAR; break;
           case 'model': selectElement = elements.modelSelect; placeholder = PLACEHOLDERS.MODEL; break;
@@ -308,18 +262,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectElement) resetSelect(selectElement, placeholder);
       }
       if(elements.findPartsButton) elements.findPartsButton.disabled = true;
-      if (['type', 'category', 'make', 'year'].includes(currentLevel)) {
+      if (['type', 'make', 'year'].includes(currentLevel)) {
         if(elements.resultsContainer) elements.resultsContainer.innerHTML = '<p>Please select your vehicle details above to find compatible parts.</p>';
+        if(elements.filtersContainer) elements.filtersContainer.style.display = 'none';
         clearError(sectionId);
       }
     };
 
     const disableAllSelectors = () => {
         if(elements.typeSelect) elements.typeSelect.disabled = true;
-        if (elements.categorySelect) {
-            destroyCategoryChoices();
-            elements.categorySelect.disabled = true;
-        }
         if(elements.makeSelect) elements.makeSelect.disabled = true;
         if(elements.yearSelect) elements.yearSelect.disabled = true;
         if(elements.modelSelect) elements.modelSelect.disabled = true;
@@ -334,13 +285,19 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {
           console.warn(`Could not clear last selected vehicle from localStorage:`, e);
       }
+      sectionStates[sectionId].allProducts = [];
+      sectionStates[sectionId].productCards = [];
       resetSelect(elements.typeSelect, PLACEHOLDERS.TYPE, true);
-      resetSelect(elements.categorySelect, PLACEHOLDERS.CATEGORY, true);
       resetSelect(elements.makeSelect, PLACEHOLDERS.MAKE, true);
       resetSelect(elements.yearSelect, PLACEHOLDERS.YEAR, true);
       resetSelect(elements.modelSelect, PLACEHOLDERS.MODEL, true);
       if(elements.findPartsButton) elements.findPartsButton.disabled = true;
       if(elements.resultsContainer) elements.resultsContainer.innerHTML = '<p>Please select your vehicle details above to find compatible parts.</p>';
+      if(elements.filtersContainer) {
+          elements.filtersContainer.style.display = 'none';
+          resetSelect(elements.filterCategorySelect, 'All Categories', false);
+          resetSelect(elements.filterSubCategorySelect, 'All SubCategories', false);
+      }
       clearError(sectionId);
       initialize();
     };
@@ -348,13 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveSelectedVehicle = () => {
         const selectedVehicle = {
             type: elements.typeSelect?.value,
-            category: elements.categorySelect?.value.split(' - ')[0].trim(),
-            subCategory: elements.categorySelect?.value.split(' - ').slice(1).join(' - ').trim(),
             make: elements.makeSelect?.value,
             year: elements.yearSelect?.value,
             model: elements.modelSelect?.value
         };
-        if (selectedVehicle.type && selectedVehicle.category && selectedVehicle.make && selectedVehicle.year && selectedVehicle.model) {
+        if (selectedVehicle.type && selectedVehicle.make && selectedVehicle.year && selectedVehicle.model) {
             try {
                 localStorage.setItem(LAST_SELECTED_VEHICLE_STORAGE_KEY, JSON.stringify(selectedVehicle));
             } catch (e) {
@@ -499,51 +454,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return cardDiv;
     };
 
-    const displayResults = async (fitmentProducts) => {
-        if (!elements.resultsContainer) return;
-        elements.resultsContainer.innerHTML = '';
-        if (!Array.isArray(fitmentProducts) || fitmentProducts.length === 0) {
+    const displayResults = (productCards) => {
+      if (!elements.resultsContainer) return;
+      elements.resultsContainer.innerHTML = '';
+      if (!Array.isArray(productCards) || productCards.length === 0) {
+          const selectedCategory = elements.filterCategorySelect.value;
+          const selectedSubCategory = elements.filterSubCategorySelect.value;
+          if (selectedCategory || selectedSubCategory) {
+            elements.resultsContainer.innerHTML = '<p>No matching parts found for the current filter selection.</p>';
+          } else {
             elements.resultsContainer.innerHTML = '<p>No matching part numbers found for the selected vehicle.</p>';
-            return;
-        }
-        const productGrid = document.createElement('div');
-        productGrid.className = 'fitment-product-grid';
-        for (let i = 0; i < Math.min(fitmentProducts.length, SKELETON_CARD_COUNT); i++) {
-            productGrid.appendChild(createSkeletonCard());
-        }
-        elements.resultsContainer.appendChild(productGrid);
-
-        const shopifyDataPromises = fitmentProducts.map(gammaProduct =>
-            fetchShopifyProductBySkuMultiStep(gammaProduct?.[API_RESPONSE_KEYS.PRODUCT_SKU])
-                .then(shopifyResult => ({
-                    sku: gammaProduct?.[API_RESPONSE_KEYS.PRODUCT_SKU],
-                    description: gammaProduct?.[API_RESPONSE_KEYS.PRODUCT_DESC],
-                    shopifyResult
-                }))
-        );
-
-        const shopifyResults = await Promise.all(shopifyDataPromises);
-        productGrid.innerHTML = '';
-        let foundCount = 0;
-        const fragment = document.createDocumentFragment();
-        shopifyResults.forEach(({ sku, description, shopifyResult }) => {
-            if (shopifyResult?.product && shopifyResult?.variant) {
-                const productCardElement = createProductCard(shopifyResult.product, shopifyResult.variant);
-                if (productCardElement) {
-                    foundCount++;
-                    fragment.appendChild(productCardElement);
-                }
-            } else {
-                fragment.appendChild(createUnmatchedSkuCard(sku, description));
-            }
-        });
-        productGrid.appendChild(fragment);
-
-        if (foundCount === 0 && shopifyResults.length > 0) {
-            const summaryMessage = document.createElement('p');
-            summaryMessage.textContent = `Found ${shopifyResults.length} part number(s), but they are not currently available in this store.`;
-            elements.resultsContainer.insertBefore(summaryMessage, productGrid);
-        }
+          }
+          return;
+      }
+      const productGrid = document.createElement('div');
+      productGrid.className = 'fitment-product-grid';
+      const fragment = document.createDocumentFragment();
+      productCards.forEach(cardData => {
+          fragment.appendChild(cardData.element);
+      });
+      productGrid.appendChild(fragment);
+      elements.resultsContainer.appendChild(productGrid);
     };
 
     const loadDataFor = async (level, params, cacheKey, selectElement, placeholder, responseKey, processFn) => {
@@ -565,63 +496,84 @@ document.addEventListener('DOMContentLoaded', () => {
             const processedData = processFn(data);
             if (processedData.length === 0) {
                 displayError(`No ${level} found for the current selection.`, sectionId);
-                resetSelect(selectElement, placeholder);
+                resetSelect(selectElement, placeholder, true);
             } else {
                 populateSelect(selectElement, processedData);
             }
         } catch (error) {
             displayError(`Failed to load ${level}: ${error.message}`, sectionId, error.isRetryable);
-            resetSelect(selectElement, placeholder);
+            resetSelect(selectElement, placeholder, true);
         } finally {
             toggleLoading(selectElement, false);
             sectionStates[sectionId].currentActionInProgress = null;
         }
     };
 
-    const loadCategoriesData = () => {
-        const selectedType = elements.typeSelect?.value;
-        if (!selectedType) return;
-        loadDataFor('categories', { type: selectedType }, `categories_${selectedType}`, elements.categorySelect, PLACEHOLDERS.CATEGORY, API_RESPONSE_KEYS.CATEGORIES,
-            (data) => [...new Set(data.map(item => (item?.[API_RESPONSE_KEYS.CATEGORY_MAIN] || '').trim() ? `${item[API_RESPONSE_KEYS.CATEGORY_MAIN].trim()}${item[API_RESPONSE_KEYS.CATEGORY_SUB] ? ` - ${item[API_RESPONSE_KEYS.CATEGORY_SUB].trim()}` : ''}` : null).filter(Boolean))].sort((a, b) => a.localeCompare(b))
-        );
-    };
-
     const loadMakesData = () => {
         const type = elements.typeSelect?.value;
-        const combinedCategory = elements.categorySelect?.value;
-        if (!type || !combinedCategory) return;
-        const [category, subCategory] = combinedCategory.split(' - ').map(s => s.trim());
-        const params = { type, category, ...(subCategory && { subCategory }) };
-        loadDataFor('makes', params, `makes_${type}_${combinedCategory}`, elements.makeSelect, PLACEHOLDERS.MAKE, API_RESPONSE_KEYS.MAKES, data => data.sort());
+        if (!type) return;
+        loadDataFor('makes', { type }, `makes_${type}`, elements.makeSelect, PLACEHOLDERS.MAKE, API_RESPONSE_KEYS.MAKES, data => data.sort());
     };
 
     const loadYearsData = () => {
         const type = elements.typeSelect?.value;
-        const combinedCategory = elements.categorySelect?.value;
         const make = elements.makeSelect?.value;
-        if (!type || !combinedCategory || !make) return;
-        const [category, subCategory] = combinedCategory.split(' - ').map(s => s.trim());
-        const params = { type, make, category, ...(subCategory && { subCategory }) };
-        loadDataFor('years', params, `years_${type}_${combinedCategory}_${make}`, elements.yearSelect, PLACEHOLDERS.YEAR, API_RESPONSE_KEYS.YEARS, data => data.map(Number).filter(Boolean).sort((a, b) => b - a));
+        if (!type || !make) return;
+        loadDataFor('years', { type, make }, `years_${type}_${make}`, elements.yearSelect, PLACEHOLDERS.YEAR, API_RESPONSE_KEYS.YEARS, data => data.map(Number).filter(Boolean).sort((a, b) => b - a));
     };
 
     const loadModelsData = () => {
         const type = elements.typeSelect?.value;
-        const combinedCategory = elements.categorySelect?.value;
         const make = elements.makeSelect?.value;
         const year = elements.yearSelect?.value;
-        if (!type || !combinedCategory || !make || !year) return;
-        const [category, subCategory] = combinedCategory.split(' - ').map(s => s.trim());
-        const params = { type, make, year, category, ...(subCategory && { subCategory }) };
-        loadDataFor('models', params, `models_${type}_${combinedCategory}_${make}_${year}`, elements.modelSelect, PLACEHOLDERS.MODEL, API_RESPONSE_KEYS.MODELS, data => data.sort());
+        if (!type || !make || !year) return;
+        loadDataFor('models', { type, make, year }, `models_${type}_${make}_${year}`, elements.modelSelect, PLACEHOLDERS.MODEL, API_RESPONSE_KEYS.MODELS, data => data.sort());
+    };
+
+    const applyFilters = () => {
+        const selectedCategory = elements.filterCategorySelect.value;
+        const selectedSubCategory = elements.filterSubCategorySelect.value;
+        const allCards = sectionStates[sectionId].productCards;
+
+        const filteredCards = allCards.filter(cardData => {
+            const categoryMatch = !selectedCategory || cardData.category === selectedCategory;
+            const subCategoryMatch = !selectedSubCategory || cardData.subCategory === selectedSubCategory;
+            return categoryMatch && subCategoryMatch;
+        });
+
+        displayResults(filteredCards);
+    };
+
+    const populateAndShowFilters = (products) => {
+        const { filterCategorySelect, filterSubCategorySelect, filtersContainer } = elements;
+        if (!products || products.length === 0) {
+            filtersContainer.style.display = 'none';
+            return;
+        }
+
+        const categories = [...new Set(products.map(p => p[API_RESPONSE_KEYS.CATEGORY_MAIN]).filter(Boolean))].sort();
+        const subCategories = [...new Set(products.map(p => p[API_RESPONSE_KEYS.CATEGORY_SUB]).filter(Boolean))].sort();
+
+        resetSelect(filterCategorySelect, 'All Categories', false);
+        populateSelect(filterCategorySelect, categories);
+        filterCategorySelect.disabled = categories.length === 0;
+
+        resetSelect(filterSubCategorySelect, 'All SubCategories', false);
+        populateSelect(filterSubCategorySelect, subCategories);
+        filterSubCategorySelect.disabled = subCategories.length === 0;
+
+        if (categories.length > 0 || subCategories.length > 0) {
+            filtersContainer.style.display = 'flex';
+        } else {
+            filtersContainer.style.display = 'none';
+        }
     };
 
     const performSearch = async () => {
       sectionStates[sectionId].currentActionInProgress = performSearch;
       saveSelectedVehicle();
-      const { typeSelect, categorySelect, makeSelect, yearSelect, modelSelect, findPartsButton, resultsContainer } = elements;
-      const [category, subCategory] = categorySelect.value.split(' - ').map(s => s.trim());
-      if (!typeSelect.value || !category || !makeSelect.value || !yearSelect.value || !modelSelect.value) {
+      const { typeSelect, makeSelect, yearSelect, modelSelect, findPartsButton, resultsContainer, filtersContainer } = elements;
+      if (!typeSelect.value || !makeSelect.value || !yearSelect.value || !modelSelect.value) {
           displayError('Please ensure all fields are selected.', sectionId);
           sectionStates[sectionId].currentActionInProgress = null;
           return;
@@ -629,13 +581,51 @@ document.addEventListener('DOMContentLoaded', () => {
       findPartsButton.classList.add('is-loading');
       findPartsButton.disabled = true;
       clearError(sectionId);
+      resultsContainer.innerHTML = '';
+      filtersContainer.style.display = 'none';
+      const productGrid = document.createElement('div');
+      productGrid.className = 'fitment-product-grid';
+      for (let i = 0; i < SKELETON_CARD_COUNT; i++) {
+        productGrid.appendChild(createSkeletonCard());
+      }
+      resultsContainer.appendChild(productGrid);
+
       try {
-          const params = { type: typeSelect.value, make: makeSelect.value, year: yearSelect.value, model: modelSelect.value, category, ...(subCategory && { subCategory }) };
+          const params = { make: makeSelect.value, year: yearSelect.value, model: modelSelect.value };
           const apiUrl = `${apiEndpoints.products}?${new URLSearchParams(params).toString()}`;
           const gammaData = await fetchAPI(apiUrl);
           const productsData = gammaData?.[API_RESPONSE_KEYS.PRODUCTS] || gammaData || [];
           if (!Array.isArray(productsData)) throw new Error('Invalid product data format.');
-          await displayResults(productsData);
+
+          sectionStates[sectionId].allProducts = productsData;
+
+          const shopifyDataPromises = productsData.map(gammaProduct =>
+            fetchShopifyProductBySkuMultiStep(gammaProduct?.[API_RESPONSE_KEYS.PRODUCT_SKU])
+                .then(shopifyResult => ({
+                    gammaProduct,
+                    shopifyResult
+                }))
+          );
+
+          const combinedResults = await Promise.all(shopifyDataPromises);
+
+          sectionStates[sectionId].productCards = combinedResults.map(({ gammaProduct, shopifyResult }) => {
+            let cardElement;
+            if (shopifyResult?.product && shopifyResult?.variant) {
+                cardElement = createProductCard(shopifyResult.product, shopifyResult.variant);
+            } else {
+                cardElement = createUnmatchedSkuCard(gammaProduct?.[API_RESPONSE_KEYS.PRODUCT_SKU], gammaProduct?.[API_RESPONSE_KEYS.PRODUCT_DESC]);
+            }
+            return {
+              element: cardElement,
+              category: gammaProduct?.[API_RESPONSE_KEYS.CATEGORY_MAIN],
+              subCategory: gammaProduct?.[API_RESPONSE_KEYS.CATEGORY_SUB],
+            };
+          });
+
+          displayResults(sectionStates[sectionId].productCards);
+          populateAndShowFilters(productsData);
+
       } catch (error) {
           displayError(`Failed to find parts: ${error.message}`, sectionId, error.isRetryable);
           if(resultsContainer) resultsContainer.innerHTML = '<p>Could not load products due to an error.</p>';
@@ -646,8 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    elements.typeSelect?.addEventListener('change', () => { resetSubsequentDropdowns('type'); saveSelectedVehicle(); if (elements.typeSelect.value) loadCategoriesData(); });
-    elements.categorySelect?.addEventListener('change', () => { resetSubsequentDropdowns('category'); saveSelectedVehicle(); if (elements.categorySelect.value) loadMakesData(); });
+    elements.typeSelect?.addEventListener('change', () => { resetSubsequentDropdowns('type'); saveSelectedVehicle(); if (elements.typeSelect.value) loadMakesData(); });
     elements.makeSelect?.addEventListener('change', () => { resetSubsequentDropdowns('make'); saveSelectedVehicle(); if (elements.makeSelect.value) loadYearsData(); });
     elements.yearSelect?.addEventListener('change', () => { resetSubsequentDropdowns('year'); saveSelectedVehicle(); if (elements.yearSelect.value) loadModelsData(); });
     elements.modelSelect?.addEventListener('change', () => {
@@ -657,6 +646,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     elements.findPartsButton?.addEventListener('click', performSearch);
     elements.resetButton?.addEventListener('click', resetAllSelectorsAndResults);
+    elements.filterCategorySelect?.addEventListener('change', applyFilters);
+    elements.filterSubCategorySelect?.addEventListener('change', applyFilters);
 
     const setInitialToggleState = () => {
         if (!isToggleEnabled || !elements.toggleButton) return;

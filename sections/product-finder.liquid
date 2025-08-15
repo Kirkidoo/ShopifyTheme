@@ -69,15 +69,7 @@
             </select>
             <span id="fitment-type-loading-{{ section.id }}" class="fitment-loading fitment-type-loading" style="display: none;"><span class="fitment-spinner"></span></span>
           </div>
-          {% comment %} 2. Category Selector {% endcomment %}
-          <div class="fitment-selector">
-            <label for="fitment-category-{{ section.id }}">Category</label>
-            <select id="fitment-category-{{ section.id }}" name="fitment_category" class="fitment-select fitment-category-select" disabled aria-describedby="fitment-category-loading-{{ section.id }}">
-              <option value="" selected disabled>-- Select Category --</option>
-            </select>
-            <span id="fitment-category-loading-{{ section.id }}" class="fitment-loading fitment-category-loading" style="display: none;"><span class="fitment-spinner"></span></span>
-          </div>
-          {% comment %} 3. Make Selector {% endcomment %}
+          {% comment %} 2. Make Selector {% endcomment %}
           <div class="fitment-selector">
             <label for="fitment-make-{{ section.id }}">Make</label>
             <select id="fitment-make-{{ section.id }}" name="fitment_make" class="fitment-select fitment-make-select" disabled aria-describedby="fitment-make-loading-{{ section.id }}">
@@ -85,7 +77,7 @@
             </select>
              <span id="fitment-make-loading-{{ section.id }}" class="fitment-loading fitment-make-loading" style="display: none;"><span class="fitment-spinner"></span></span>
           </div>
-          {% comment %} 4. Year Selector {% endcomment %}
+          {% comment %} 3. Year Selector {% endcomment %}
           <div class="fitment-selector">
             <label for="fitment-year-{{ section.id }}">Year</label>
             <select id="fitment-year-{{ section.id }}" name="fitment_year" class="fitment-select fitment-year-select" disabled aria-describedby="fitment-year-loading-{{ section.id }}">
@@ -93,7 +85,7 @@
             </select>
              <span id="fitment-year-loading-{{ section.id }}" class="fitment-loading fitment-year-loading" style="display: none;"><span class="fitment-spinner"></span></span>
           </div>
-          {% comment %} 5. Model Selector {% endcomment %}
+          {% comment %} 4. Model Selector {% endcomment %}
           <div class="fitment-selector">
             <label for="fitment-model-{{ section.id }}">Model</label>
             <select id="fitment-model-{{ section.id }}" name="fitment_model" class="fitment-select fitment-model-select" disabled aria-describedby="fitment-model-loading-{{ section.id }}">
@@ -113,6 +105,21 @@
           <button id="fitment-reset-{{ section.id }}" class="fitment-button fitment-reset-button" type="button">Reset</button>
         </div>
       </form>
+
+      <div id="fitment-filters-{{ section.id }}" class="fitment-filters-container" style="display: none;">
+        <div class="fitment-selector">
+          <label for="fitment-filter-category-{{ section.id }}">Filter by Category</label>
+          <select id="fitment-filter-category-{{ section.id }}" name="fitment_filter_category" class="fitment-select fitment-filter-category-select">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+        <div class="fitment-selector">
+          <label for="fitment-filter-subcategory-{{ section.id }}">Filter by SubCategory</label>
+          <select id="fitment-filter-subcategory-{{ section.id }}" name="fitment_filter_subcategory" class="fitment-select fitment-filter-subcategory-select">
+            <option value="">All SubCategories</option>
+          </select>
+        </div>
+      </div>
 
       <div id="fitment-results-{{ section.id }}" class="fitment-results-container" aria-live="polite">
         <p>Please select your vehicle details above to find compatible parts.</p>
