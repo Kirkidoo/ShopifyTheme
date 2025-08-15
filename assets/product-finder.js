@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filtersContainer: section.querySelector(`#fitment-filters-${sectionId}`),
         filterCategorySelect: section.querySelector(`#fitment-filter-category-${sectionId}`),
         filterSubCategorySelect: section.querySelector(`#fitment-filter-subcategory-${sectionId}`),
+        resetFiltersButton: section.querySelector(`#fitment-reset-filters-${sectionId}`),
         typeLoading: section.querySelector('.fitment-type-loading'),
         makeLoading: section.querySelector('.fitment-make-loading'),
         yearLoading: section.querySelector('.fitment-year-loading'),
@@ -552,17 +553,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const categories = [...new Set(products.map(p => p[API_RESPONSE_KEYS.CATEGORY_MAIN]).filter(Boolean))].sort();
-        const subCategories = [...new Set(products.map(p => p[API_RESPONSE_KEYS.CATEGORY_SUB]).filter(Boolean))].sort();
 
         resetSelect(filterCategorySelect, 'All Categories', false);
         populateSelect(filterCategorySelect, categories);
         filterCategorySelect.disabled = categories.length === 0;
 
+        // Initially populate sub-categories with all available options
+        const allSubCategories = [...new Set(products.map(p => p[API_RESPONSE_KEYS.CATEGORY_SUB]).filter(Boolean))].sort();
         resetSelect(filterSubCategorySelect, 'All SubCategories', false);
-        populateSelect(filterSubCategorySelect, subCategories);
-        filterSubCategorySelect.disabled = subCategories.length === 0;
+        populateSelect(filterSubCategorySelect, allSubCategories);
+        filterSubCategorySelect.disabled = allSubCategories.length === 0;
 
-        if (categories.length > 0 || subCategories.length > 0) {
+        if (categories.length > 0 || allSubCategories.length > 0) {
             filtersContainer.style.display = 'flex';
         } else {
             filtersContainer.style.display = 'none';
@@ -636,6 +638,57 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
+    const handleCategoryChange = () => {
+        const selectedCategory = elements.filterCategorySelect.value;
+        const allProducts = sectionStates[sectionId].allProducts;
+
+        let relevantSubCategories = [];
+        if (selectedCategory) {
+            relevantSubCategories = [...new Set(allProducts
+                .filter(p => p[API_RESPONSE_KEYS.CATEGORY_MAIN] === selectedCategory)
+                .map(p => p[API_RESPONSE_KEYS.CATEGORY_SUB])
+                .filter(Boolean))]
+                .sort();
+        } else {
+            // If "All Categories" is selected, show all subcategories
+            relevantSubCategories = [...new Set(allProducts.map(p => p[API_RESPONSE_KEYS.CATEGORY_SUB]).filter(Boolean))].sort();
+        }
+
+        const currentSubCategory = elements.filterSubCategorySelect.value;
+        resetSelect(elements.filterSubCategorySelect, 'All SubCategories', false);
+        populateSelect(elements.filterSubCategorySelect, relevantSubCategories);
+        // If the previously selected subcategory is still valid, keep it selected
+        if (relevantSubCategories.includes(currentSubCategory)) {
+            elements.filterSubCategorySelect.value = currentSubCategory;
+        }
+
+        applyFilters();
+    };
+
+    const handleSubCategoryChange = () => {
+        const selectedSubCategory = elements.filterSubCategorySelect.value;
+        const allProducts = sectionStates[sectionId].allProducts;
+
+        if (selectedSubCategory) {
+            const parentCategory = allProducts.find(p => p[API_RESPONSE_KEYS.CATEGORY_SUB] === selectedSubCategory)?.[API_RESPONSE_KEYS.CATEGORY_MAIN];
+            if (parentCategory && elements.filterCategorySelect.value !== parentCategory) {
+                elements.filterCategorySelect.value = parentCategory;
+                // This will trigger the category change event, which will call applyFilters
+                handleCategoryChange();
+            } else {
+                 applyFilters();
+            }
+        } else {
+            applyFilters();
+        }
+    };
+
+    const resetFilters = () => {
+        elements.filterCategorySelect.value = "";
+        elements.filterSubCategorySelect.value = "";
+        handleCategoryChange(); // This will reset subcategories and apply filters
+    };
+
     elements.typeSelect?.addEventListener('change', () => { resetSubsequentDropdowns('type'); saveSelectedVehicle(); if (elements.typeSelect.value) loadMakesData(); });
     elements.makeSelect?.addEventListener('change', () => { resetSubsequentDropdowns('make'); saveSelectedVehicle(); if (elements.makeSelect.value) loadYearsData(); });
     elements.yearSelect?.addEventListener('change', () => { resetSubsequentDropdowns('year'); saveSelectedVehicle(); if (elements.yearSelect.value) loadModelsData(); });
@@ -646,8 +699,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     elements.findPartsButton?.addEventListener('click', performSearch);
     elements.resetButton?.addEventListener('click', resetAllSelectorsAndResults);
-    elements.filterCategorySelect?.addEventListener('change', applyFilters);
-    elements.filterSubCategorySelect?.addEventListener('change', applyFilters);
+    elements.filterCategorySelect?.addEventListener('change', handleCategoryChange);
+    elements.filterSubCategorySelect?.addEventListener('change', handleSubCategoryChange);
+    elements.resetFiltersButton?.addEventListener('click', resetFilters);
 
     const setInitialToggleState = () => {
         if (!isToggleEnabled || !elements.toggleButton) return;

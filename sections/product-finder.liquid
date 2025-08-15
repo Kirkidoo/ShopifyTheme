@@ -112,13 +112,16 @@
           <select id="fitment-filter-category-{{ section.id }}" name="fitment_filter_category" class="fitment-select fitment-filter-category-select">
             <option value="">All Categories</option>
           </select>
+          <span class="fitment-loading fitment-filter-category-loading" style="display: none;"><span class="fitment-spinner"></span></span>
         </div>
         <div class="fitment-selector">
           <label for="fitment-filter-subcategory-{{ section.id }}">Filter by SubCategory</label>
           <select id="fitment-filter-subcategory-{{ section.id }}" name="fitment_filter_subcategory" class="fitment-select fitment-filter-subcategory-select">
             <option value="">All SubCategories</option>
           </select>
+          <span class="fitment-loading fitment-filter-subcategory-loading" style="display: none;"><span class="fitment-spinner"></span></span>
         </div>
+        <button id="fitment-reset-filters-{{ section.id }}" class="fitment-button fitment-reset-filters-button" type="button">Reset Filters</button>
       </div>
 
       <div id="fitment-results-{{ section.id }}" class="fitment-results-container" aria-live="polite">
