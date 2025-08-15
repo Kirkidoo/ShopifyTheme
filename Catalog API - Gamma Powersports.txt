@@ -1,0 +1,1452 @@
+Catalog API - Gamma Powersports
+A collection of API methods for interacting with Gamma Powersports.
+
+Base URL: All request endpoints specified in this document are relative to the following base URL:
+https://api.gammapowersports.com
+
+Account Endpoints
+GET Get Ship To
+Endpoint: GET {{api_url}}/account/getShipTo?shipToNumber={shipToNumber}
+
+This endpoint accepts a shipToNumber and returns the matching shipping information from the Gamma System. If the list of available ship-to numbers for your customer is unknown, you can use the "Get Ship Tos" request to get a complete list.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters:
+| Name           | Example Value | Description                 |
+|----------------|---------------|-----------------------------|
+| shipToNumber | 1           | The ship-to number to query |
+
+Response Object Fields:
+
+data: The result of the request.
+
+shippingInformation: An object representing the shipping details for the given ship-to number.
+
+shipToNo: (String) The ship-to number passed.
+
+isDefault: (Boolean) true if this is the default ship-to for your account in Gamma, false otherwise.
+
+customerName: (String) The account name for the ship-to.
+
+address: (String) The address found on the ship-to.
+
+telephone: (String) The phone number on the ship-to.
+
+city: (String) The city for the ship-to.
+
+province: (String) The standardized province code for the ship-to.
+
+postalCode: (String) The postal code on the ship-to.
+
+country: (String) The standardized country code for the ship-to.
+
+error: An error block containing any errors. If the status is success, it will be empty.
+
+code: (Integer) The HTTP status code.
+
+status: (String) The HTTP status message.
+
+message: (String) A description of the error and any steps to correct it.
+
+timestamp: (String) The time at which the error occurred.
+
+url: (String) The URL at which the error occurred.
+
+status: (String) The status of the request. Possible values:
+
+success: The request completed successfully.
+
+failed: The request failed due to an unexpected error.
+
+error: The request had an error that can be resolved by the user.
+
+Example Success Response (GET {{api_url}}/account/getShipTo?shipToNumber=1):
+
+{
+  "data": {
+    "shippingInformation": {
+      "shipToNo": "1",
+      "isDefault": false,
+      "customerName": "Sample Customer",
+      "address": "123 Test Lane",
+      "telephone": "1-888-888-8888",
+      "city": "ORILLIA",
+      "province": "ON"
+    }
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Ship Tos
+Endpoint: GET {{api_url}}/account/getShipTos
+
+This endpoint will return a list of available ship-to objects representing each ship-to found for your dealer account.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Response Object Fields:
+
+data: The result of the request.
+
+shippingInformation: (Array of Objects) A list of objects representing the shipping details for each ship-to number found for your account. Each object contains:
+
+shipToNo: (String) The ship-to number.
+
+isDefault: (Boolean) true if the ship-to address is the default on your account, false otherwise.
+
+customerName: (String) The account name for the ship-to.
+
+address: (String) The address found on the ship-to.
+
+telephone: (String) The phone number on the ship-to.
+
+city: (String) The city for the ship-to.
+
+province: (String) The standardized province code for the ship-to.
+
+postalCode: (String) The postal code on the ship-to.
+
+country: (String) The standardized country code for the ship-to.
+
+error: (Object) An error block (see "Get Ship To" for structure).
+
+status: (String) The status of the request (see "Get Ship To" for values).
+
+Example Success Response (GET {{api_url}}/account/getShipTos):
+
+{
+  "data": {
+    "shippingInformation": [
+      {
+        "shipToNo": "1",
+        "isDefault": false,
+        "customerName": "Sample Customer",
+        "address": "123 Test Lane",
+        "telephone": "1-888-888-8888",
+        "city": "ORILLIA",
+        "province": "ON"
+      }
+      // ... more ship-to objects
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+Inventory Endpoints
+GET Get Inventory Level
+Endpoint: GET {{api_url}}/inventory?partNumber={partNumber}
+Alternatively: GET {{api_url}}/inventory/{partNumber}
+
+This endpoint accepts a part number and will return a JSON response containing stock level information.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters:
+| Name         | Example Value | Description                                  |
+|--------------|---------------|----------------------------------------------|
+| partNumber | 880-0004    | The part number to check inventory for.      |
+
+Response Object Fields:
+
+data:
+
+partNumber: (String) The requested part number.
+
+inventoryLevel: (Object)
+
+quantity: (Integer) Quantity in stock.
+
+stockStatus: (String) "In Stock" or "Out of Stock".
+
+error: (Object) An error block.
+
+status: (String) The status of the request.
+
+Example Success Response (GET {{api_url}}/inventory?partNumber=880-0004):
+
+{
+  "data": {
+    "partNumber": "880-0004",
+    "inventoryLevel": {
+      "quantity": 0,
+      "stockStatus": "Out of Stock"
+    }
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Item Details
+Endpoint: GET {{api_url}}/item/getDetail?itemNumber={itemNumber}
+
+This endpoint accepts a part number as a query string parameter and will return a JSON response containing item information.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+| Content-Type  | application/json    |
+
+Parameters:
+| Name         | Example Value | Description                             |
+|--------------|---------------|-----------------------------------------|
+| itemNumber | 880-0004    | The item number to get details for.     |
+
+Response Object Fields:
+
+data:
+
+pricing: (Object) Pricing information.
+
+item: (String) Item number.
+
+price: (Number) Dealer specific price.
+
+qty: (Integer) Minimum quantity for this price.
+
+msrp: (Number) Manufacturer suggested retail price.
+
+dealer: (Number) Dealer wholesale price.
+
+discount: (Number) Discount percentage.
+
+type: (String) Type of discount.
+
+details: (Object) Item information.
+
+itemNumber: (String) Item number.
+
+description1: (String) Main description.
+
+description2: (String) Secondary description (color, size, etc.).
+
+imgRef: (String) Web path to item image (not guaranteed).
+
+smallimgRef: (String) Web path to item thumbnail image (not guaranteed).
+
+extendedDescription: (String) HTML formatted extended description (not always present).
+
+techSpecs: (String) HTML formatted technical specifications (not always present).
+
+vendorPartNumber: (String) Vendor's part number.
+
+inventory: (Object) Inventory information (same as "Get Inventory Level" endpoint).
+
+quantity: (Integer) Amount of stock available (shows exact for < 99, else 99).
+
+stockStatus: (String) "In Stock" or "Out of Stock".
+
+error: (Object) An error block.
+
+status: (String) The status of the request.
+
+Example Success Response (GET {{api_url}}/item/getDetail?itemNumber=AW441050):
+
+{
+  "data": {
+    "pricing": {
+      "item": "AW441050",
+      "price": 185.06,
+      "qty": 1,
+      "msrp": 334.95,
+      "dealer": 217.72,
+      "discount": 15,
+      "type": "Price by Preferred Vendor"
+    },
+    "details": {
+      // ... details fields ...
+    },
+    "inventory": {
+      // ... inventory fields ...
+    }
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Item Arrival Dates
+Endpoint: GET {{api_url}}/inventory/getEstimatedArrivalsForItem?partNumber={partNumber}
+
+This endpoint will return a list of arrival dates and quantities for the passed item. Arrival dates with etaType equal to CARGO are fully confirmed, while those with type PO are subject to change.
+
+Parameters:
+| Name         | Example Value | Description                     |
+|--------------|---------------|---------------------------------|
+| partNumber | 4-641619    | The part number to query for.   |
+
+Response Object Fields:
+
+data:
+
+arrivalDates: (Array of Objects) List of arrival information.
+
+company: (Integer) Company identifier.
+
+poNumber (or similar field, original doc has " "): (String) Purchase Order number.
+
+qty (or similar field, original doc has q\pi y^{\prime\prime}): (Integer) Quantity arriving.
+
+item: (String) Item number.
+
+eta: (String) Estimated time of arrival (ISO 8601 format).
+
+etaType: (String) "PO" or "CARGO".
+
+error: (Object) An error block.
+
+status: (String) The status of the request.
+
+Example Success Response (GET {{api_url}}/inventory/getEstimatedArrivalsForItem?partNumber=4-641619):
+
+{
+  "data": {
+    "arrivalDates": [
+      {
+        "company": 1,
+        "poNumber": "14158", // Assuming " " was poNumber
+        "qty": 4,           // Assuming q\pi y^{\prime\prime} was qty
+        "item": "4-641619",
+        "eta": "2020-12-09T05:00:00Z",
+        "etaType": "PO"
+      }
+      // ... more arrival dates
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Fitment Machines (by Item)
+Endpoint: GET {{api_url}}/item/getFitmentMachines?itemNumber={itemNumber}
+
+This endpoint accepts an item number (passed either in JSON or as a URL parameter) and returns all available models which the part fits. Can be used on a product page to show available fitments.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters:
+| Name         | Example Value | Description                             |
+|--------------|---------------|-----------------------------------------|
+| itemNumber | 25-1025     | The item number to find fitments for.   |
+
+Response Object Fields:
+
+data:
+
+fitments: (Array of Objects) List of fitment details.
+
+productType: (String) e.g., "ATV-UTV".
+
+fitmentMake: (String) e.g., "YAMAHA".
+
+fitmentModel: (String) e.g., "YFM200 мото-4".
+
+fitmentYears: (String) e.g., "1985-1989".
+
+error: (Object) An error block.
+
+status: (String) The status of the request.
+
+Example Success Response (GET {{api_url}}/item/getFitmentMachines?itemNumber=25-1011):
+
+{
+  "data": {
+    "fitments": [
+      {
+        "productType": "ATV-UTV",
+        "fitmentMake": "YAMAHA",
+        "fitmentModel": "YFM200 мото-4",
+        "fitmentYears": "1985-1989"
+      }
+      // ... more fitments
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Changed Inventory
+Endpoint: GET {{api_url}}/inventory/getChangedInventory?dateTime={dateTime}
+
+This endpoint accepts a datetime (ISO 8601 format) and returns updated item inventory information since the specified datetime. It only supports querying changes from the current server date (TODAY, Eastern Time). An error will be thrown for any time parameter prior to 4 AM UTC.
+
+Parameters:
+| Name       | Example Value                 | Description                                                                 |
+|------------|-------------------------------|-----------------------------------------------------------------------------|
+| dateTime | 2022-05-25T14:20:00-04:00   | The datetime (ISO 8601) to find inventory changes since.                    |
+
+Response Object Fields:
+
+data: (Array of Objects) List of changed inventory items.
+
+partNumber: (String) The part number.
+
+inventoryLevel: (Object)
+
+quantity: (Integer) New quantity.
+
+stockStatus: (String) New stock status ("In Stock", "Out of Stock").
+
+error: (Object) An error block.
+
+status: (String) The status of the request.
+
+Example Success Response (GET {{api_url}}/inventory/getChangedInventory?dateTime=2022-05-25T14:20:00-04:00):
+
+{
+  "data": [
+    {
+      "partNumber": "01-04189",
+      "inventoryLevel": {
+        "quantity": 10,
+        "stockStatus": "In Stock"
+      }
+    },
+    {
+      "partNumber": "01-06511",
+      "inventoryLevel": {
+        // ...
+      }
+    }
+    // ... more changed items
+  ],
+  "error": {},
+  "status": "success"
+}
+
+Order Endpoints
+POST Post Order
+Endpoint: POST {{api_url}}/order
+
+This endpoint accepts a JSON payload containing order information. If valid, the order will be placed, and an order number returned.
+
+Key Features:
+
+testMode: If true, no order is placed; only validation occurs. Order number returned is -1-0.
+
+shipToNumber: If 99 (cross ship), shippingInformation block is required. Otherwise, if a valid ship-to number, address on file is used.
+
+allowBackorders: If true, out-of-stock items ship when available (except discontinued items with insufficient stock). Cross-ship orders CANNOT be back-ordered.
+
+shipMethod: Optional. If passed, must match an option from "Rate Shop Order". If omitted or invalid, the least expensive option is selected.
+
+customerPo: Max 20 characters.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+| Content-Type  | application/json    |
+
+Body (raw JSON):
+
+{
+  "customerPo": "Test Session Create 1",
+  "shipMethod": "BESG",
+  "shipToNumber": 1, // or 99 for cross-ship
+  "testMode": false,
+  "allowBackorders": true, // Optional
+  "shippingInformation": { // Required if shipToNumber is 99
+    "shipToEmail": "shipTo@email.com",
+    "shipToName": "Bob Smith",
+    "streetAddress1": "123 not real"
+    // ... other shipping fields if applicable
+  },
+  "items": [
+    {
+      "partNumber": "PART123",
+      "quantity": 1
+    }
+    // ... more items
+  ]
+}
+
+Response Object Fields (Success):
+
+data:
+
+message: (String) Confirmation message.
+
+orderNumber: (String) The placed order number (or -1-0 in test mode).
+
+customerPo: (String) The customer PO from the request.
+
+error: (Object) Empty on success.
+
+status: (String) success.
+
+Example Success Response (Cross Ship, Test Mode):
+
+{
+  "data": {
+    "message": "Your order has been received.",
+    "orderNumber": "-1-0",
+    "customerPo": "Test Order #11"
+  },
+  "error": {},
+  "status": "success"
+}
+
+POST Get Order Estimate
+Endpoint: POST {{api_url}}/order/getOrderEstimate
+
+Returns an estimate for an order request. Accepts the same payload as the "Post Order" method. Uses dealer-specific discounts and applicable fees. Freight cost and shipping method represent the least expensive rate.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+| Content-Type  | application/json    |
+
+Body (raw JSON):
+(Same structure as "Post Order" endpoint)
+
+{
+  "customerPo": "Test Order #13 No Comment",
+  "shipToNumber": 1, // or 99
+  "shippingInformation": {
+    "shipToEmail": "shipTo@email.com",
+    "shipToName": "Bob Smith",
+    "streetAddress1": "123 not real",
+    "streetAddress2": "Apt. 2",
+    "telephone": "(223) 456-7890"
+    // ... other relevant fields
+  },
+  "items": [
+    {
+      "partNumber": "ITEMXYZ",
+      "quantity": 2
+    }
+  ]
+}
+
+Response Object Fields:
+
+data:
+
+message: (String) Information about system adjustments (e.g., customerPo truncation).
+
+order: (Object) Order estimate details.
+
+freightTotal: (Number) Cost of the least expensive freight option.
+
+grandTotal: (Number) Total cost of the order estimate.
+
+shipMethod: (String) Default freight carrier (least expensive).
+
+taxTotal: (Number) Tax portion of the grand total.
+
+rates: (Array of Objects) List of available carriers and rates.
+
+arrivalDate: (String) Estimated arrival date.
+
+code: (String) Carrier code (for "Post Order").
+
+description: (String) Carrier service level description.
+
+rate: (Number) Cost for this shipping method.
+
+shippingInformation: (Object) Shipping information for the estimate.
+
+shipToEmail, shipToName, streetAddress1, streetAddress2, telephone, city, province, postalCode, country.
+
+materialTotal: (Number) Item cost portion of the grand total.
+
+customerPo: (String) Customer PO (possibly truncated).
+
+items: (Array of Objects) List of items on the order.
+
+feeAmount: (Number) Fee amounts (e.g., environmental).
+
+feeDescription: (String) Description for item fee.
+
+quantity: (Integer) Quantity ordered.
+
+extendedPrice: (Number) Price * quantity.
+
+price: (Number) Unit price.
+
+description: (String) Item name.
+
+extendedFeeAmount: (Number) Fee amount * quantity.
+
+partNumber: (String) Gamma part number.
+
+error: (Object) Error information if applicable.
+
+code, status, message, timestamp, url.
+
+invalidFields: (Array of Objects) List of invalid fields.
+
+field: (String) Field identifier in JSON payload.
+
+message: (String) Specific error message for the field.
+
+status: (String) success, error, or failed.
+
+Example Success Response:
+
+{
+  "data": {
+    "message": "The customerPo field was truncated to 20 characters.",
+    "order": {
+      "freightTotal": 9.97,
+      "grandTotal": 148.38,
+      "shipMethod": "PGSR",
+      "taxTotal": 14.94,
+      "rates": [
+        // ... rate objects ...
+      ],
+      // ... other order fields ...
+      "items": [
+        // ... item objects ...
+      ]
+    }
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Order Status
+Endpoint: GET {{api_url}}/order/status/{orderNumber}
+(e.g., /order/status/7328362-0 or /order/status/7328362)
+
+Accepts an order number and returns JSON information for a matching order.
+
+If orderNumber includes the BO number (e.g., -0), a single order is returned.
+
+Otherwise, a list of orders is returned (may still be one order, but in list format).
+
+Status Field Values:
+
+Received: Order entered Gamma system.
+
+Processing: Order is being processed by Gamma.
+
+Shipped: Order has been shipped. (Includes trackingInformation element with tracking number and carrier service).
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+| Content-Type  | application/json    |
+
+Response Object Fields (when BO included):
+
+data:
+
+orderNumber: (Integer)
+
+boNumber: (Integer)
+
+webOrderNumber: (Integer)
+
+invoiceNumber: (Integer)
+
+customerPo: (String)
+
+shipto: (String)
+
+status: (String) e.g., "Shipped"
+
+trackingInformation: (Object, if shipped)
+
+trackingNumber: (String)
+
+carrierService: (String)
+
+error: (Object)
+
+status: (String)
+
+Response Object Fields (when NO BO included, list format):
+
+data:
+
+orders: (Array of Objects) Each object has the structure described above (for "BO included").
+
+error: (Object)
+
+status: (String)
+
+Example Success Response (No BO Included):
+
+{
+  "data": {
+    "orders": [
+      {
+        "orderNumber": 7328362,
+        "boNumber": 0,
+        "webOrderNumber": 946730,
+        "invoiceNumber": 540136,
+        "customerPo": "Web #2000000268",
+        "shipto": "99",
+        "status": "Shipped",
+        "trackingInformation": {
+          "trackingNumber": "TRACK123XYZ",
+          "carrierService": "Purolator Ground"
+        }
+      }
+      // ... potentially more orders if main order number had multiple BOs
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+POST Rate Shop Order
+Endpoint: POST {{api_url}}/order/rateShop
+
+Accepts JSON payload with order information. If valid, returns a list of shipping methods and rates.
+Requires shippingInformation and items blocks in the request.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+| Content-Type  | application/json    |
+
+Body (raw JSON):
+
+{
+  "shippingInformation": {
+    "shipToName": "Bob Smith",
+    "streetAddress1": "123 not real",
+    "telephone": "(223) 456-7890",
+    "city": "Orillia",
+    "province": "ON",
+    "postalCode": "L0K1B0",
+    "country": "CA"
+    // ... other necessary shipping fields
+  },
+  "items": [
+    {
+      "partNumber": "ITEMABC",
+      "quantity": 1
+    }
+    // ... more items
+  ]
+}
+
+Response Object Fields (Success):
+
+data: (Array of Objects) List of shipping rates.
+
+rate: (String/Number) Cost of shipping.
+
+shipViaCode: (String) Carrier code (e.g., "PGSR").
+
+shipViaDescription: (String) Carrier service description (e.g., "PURO GROUND SIGNATURE REQ").
+
+arrivalDate: (String) Estimated arrival date.
+
+error: (Object)
+
+status: (String)
+
+Example Success Response:
+
+{
+  "data": [
+    {
+      "rate": "8.31",
+      "shipViaCode": "PGSR",
+      "shipViaDescription": "PURO GROUND SIGNATURE REQ",
+      "arrivalDate": "2023-01-15"
+    },
+    {
+      "rate": "8.35",
+      "shipViaCode": "UPSG",
+      "shipViaDescription": "UPS GROUND",
+      "arrivalDate": "2023-01-16"
+    }
+    // ... more rates
+  ],
+  "error": {},
+  "status": "success"
+}
+
+GET Get All Orders
+Endpoint: GET {{api_url}}/order/getOrders (can also be POST with JSON body for filters)
+
+Used to get a paginated list of orders. Supports filtering, sorting, page sizing, and pagination.
+Default (no params): 10 results, sorted by descending order number.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+| Content-Type  | application/json    | (if sending body)
+
+Body (raw JSON for filtering/sorting/pagination):
+
+{
+  "max": 10, // Results per page
+  "page": 1,   // Page number
+  "filters": {
+    "customerPo": "Web #2000000088", // Example filter
+    "dateFrom": "20230101",          // YYYYMMDD or YYYY-MM-DD
+    "idFrom": "7320000",
+    // ... other filter fields (see below)
+  },
+  "sort": {
+    "sortBy": "orderNumber", // or orderDate, orderTotal, customerName, customerAddress
+    "sortDirection": "desc"  // or asc
+  }
+}
+
+Filter Fields (filters object):
+
+idFrom, idTo: Order ID range (numeric or string, no BO number).
+
+customerPo: Contains this value (string, case insensitive).
+
+dateFrom, dateTo: Order date range (YYYYMMDD or YYYY-MM-DD).
+
+totalFrom, totalTo: Order total range (numeric or string).
+
+customerAddress, customerName: Contains this value (string, case insensitive).
+
+invoiceDateFrom, invoiceDateTo: Invoice date range.
+
+orderType: R (Returns), O (Orders - default), Q (Quotes), C (Credits).
+
+If R, orders include originalOrderNumber and originalBoNumber.
+
+onlyDrop: true/false/00/01 (for ship-to of 99).
+
+onlyShipped: true/false/00/01 (results with tracking info).
+
+onlyInvoiced: true/false/00/01.
+
+status: (Array of Strings) e.g., ["Received", "Processing"].
+
+Response Object Fields:
+
+data:
+
+orders: (Array of Objects) List of orders. Each order object typically contains:
+
+orderNumber, boNumber, webOrderNumber, invoiceNumber, customerPo, shipto, orderDate, orderTotal, status, etc.
+
+totalRecords: (Integer) Total number of records matching filters.
+
+currentPage: (Integer)
+
+totalPages: (Integer)
+
+error: (Object)
+
+status: (String)
+
+Example Success Response (Filtering with Sort and Pagination):
+
+{
+  "data": {
+    "orders": [
+      {
+        "orderNumber": 7327962,
+        "boNumber": 0,
+        "webOrderNumber": 829209,
+        "invoiceNumber": 540119,
+        "customerPo": "Test 3",
+        "shipto": "1"
+        // ... other order fields
+      }
+      // ... more orders
+    ],
+    "totalRecords": 1,
+    "currentPage": 1,
+    "totalPages": 1
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Details By Order
+Endpoint: GET {{api_url}}/order/getDetailsForOrder/{orderNumberWithBO}
+(e.g., /order/getDetailsForOrder/7327702-0)
+
+Accepts an order number (including BO number) and returns items on that order if it exists and belongs to the dealer.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+| Content-Type  | application/json    |
+
+Response Object Fields:
+
+data:
+
+details: (Array of Objects) List of items on the order.
+
+lineNumber: (Integer)
+
+itemNumber: (String)
+
+itemDescription: (String)
+
+uom: (String) Unit of Measure (e.g., "EA").
+
+qtyOrdered: (Integer)
+
+qtyShipped: (Integer)
+
+qtyBo: (Integer) // Original doc has "atvBo", assuming qtyBo
+
+price: (Number)
+// ... other item detail fields
+
+error: (Object)
+
+status: (String)
+
+Example Success Response (GET {{api_url}}/order/getDetailsForOrder/7327702-0):
+
+{
+  "data": {
+    "details": [
+      {
+        "lineNumber": 1,
+        "itemNumber": "49-03786",
+        "itemDescription": "FLY TOXIN MIPS SOLID HELMET",
+        "uom": "EA",
+        "qtyShipped": 1,
+        "qtyBo": 0 // Assuming "atvBo: B." meant 0 backordered
+        // ... other fields
+      }
+      // ... more items
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+Fitment Endpoints
+GET Get Type Options
+Endpoint: GET {{api_url}}/fitment/getTypeOptions?category={category}&subCategory={subCategory}&ignoredCategories={ignoredCategories}&itemList={itemList}
+
+Returns all distinct machine types. Supports filtering by category, subcategory, ignored categories, and item list.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters (all optional):
+| Name                | Example Value         | Description                                                                 |
+|---------------------|-----------------------|-----------------------------------------------------------------------------|
+| category          | Electrical          | Only types with fitments in this category.                                  |
+| subCategory       | Starters            | Only types with fitments in this subcategory.                               |
+| ignoredCategories | Brakes,Tires        | Comma-separated list of category labels to omit.                            |
+| itemList          | ITEM1,ITEM2         | Comma-separated item numbers; only types with fitments for these items.     |
+
+Response Object Fields:
+
+data:
+
+types: (Array of Strings) List of machine types (e.g., "ATV", "SNOWMOBILE").
+
+error: (Object) Standard error block structure.
+
+status: (String) success, failed, error.
+
+Example Success Response (GET {{api_url}}/fitment/getTypeOptions?category=Electrical&subCategory=Starters):
+
+{
+  "data": {
+    "types": [
+      "ATV",
+      "OFF-ROAD MOTORCYCLE",
+      "PWC",
+      "SCOOTER",
+      "SNOWMOBILE",
+      "STREET MOTORCYCLE",
+      "UTV/SXS"
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Make Options
+Endpoint: GET {{api_url}}/fitment/getMakeOptions?type={type}&year={year}&category={category}&subCategory={subCategory}&ignoredCategories={ignoredCategories}&itemList={itemList}
+
+Returns distinct machine makes. Can be used with "Get Year Options" and "Get Model Options" for Make-Year-Model selection.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters (all optional, type recommended):
+| Name                | Example Value  | Description                                                                 |
+|---------------------|----------------|-----------------------------------------------------------------------------|
+| type              | ATV          | Machine type (from "Get Type Options"). Recommended.                        |
+| year              | 2001         | Machine year (for Year-Make-Model flow).                                    |
+| category          | Electrical   | Only makes with fitments in this category.                                  |
+| subCategory       | Starters     | Only makes with fitments in this subcategory.                               |
+| ignoredCategories | Brakes       | Comma-separated categories to omit.                                         |
+| itemList          | ITEM1,ITEM2  | Comma-separated item numbers; only makes with fitments for these items.     |
+
+Response Object Fields:
+
+data:
+
+makes: (Array of Strings) List of machine makes (e.g., "YAMAHA", "HONDA").
+
+error: (Object) Standard error block.
+
+status: (String) success, failed, error.
+
+Example Success Response (GET {{api_url}}/fitment/getMakeOptions?type=ATV&year=2001&category=Electrical&subCategory=Starters):
+
+{
+  "data": {
+    "makes": [
+      "ARCTIC CAT",
+      "BOMBARDIER",
+      "HONDA",
+      "KAWASAKI",
+      "POLARIS",
+      "SUZUKI",
+      "YAMAHA"
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Year Options
+Endpoint: GET {{api_url}}/fitment/getYearOptions?type={type}&make={make}&category={category}&subCategory={subCategory}&ignoredCategories={ignoredCategories}&itemList={itemList}
+
+Returns distinct machine years.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters (all optional, type recommended):
+| Name                | Example Value  | Description                                                                 |
+|---------------------|----------------|-----------------------------------------------------------------------------|
+| type              | ATV          | Machine type.                                                               |
+| make              | ARCTIC CAT   | Machine make.                                                               |
+| category          | Electrical   | Only years with fitments in this category.                                  |
+| subCategory       | Starters     | Only years with fitments in this subcategory.                               |
+| ignoredCategories | Brakes       | Comma-separated categories to omit.                                         |
+| itemList          | ITEM1,ITEM2  | Comma-separated item numbers; only years with fitments for these items.     |
+
+Response Object Fields:
+
+data:
+
+years: (Array of Strings) List of machine years (e.g., "2017", "2018").
+
+error: (Object) Standard error block.
+
+status: (String) success, failed, error.
+
+Example Success Response (GET {{api_url}}/fitment/getYearOptions?type=ATV&make=ARCTIC%20CAT&category=Electrical&subCategory=Starters):
+
+{
+  "data": {
+    "years": [
+      "2017",
+      "2018",
+      "2010",
+      "2011",
+      "2012",
+      "2013",
+      "2014"
+      // ... more years
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Model Options
+Endpoint: GET {{api_url}}/fitment/getModelOptions?type={type}&make={make}&year={year}&category={category}&subCategory={subCategory}&ignoredCategories={ignoredCategories}&itemList={itemList}
+
+Returns distinct machine models. Requires make and year if not using itemList.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters:
+| Name                | Example Value     | Description                                                                 |
+|---------------------|-------------------|-----------------------------------------------------------------------------|
+| type              | ATV             | (Optional) Machine type.                                                    |
+| make              | ARCTIC CAT      | (Required unless itemList provided) Machine make.                         |
+| year              | 2001            | (Required unless itemList provided) Machine year.                         |
+| category          | Electrical      | (Optional) Only models with fitments in this category.                      |
+| subCategory       | Starters        | (Optional) Only models with fitments in this subcategory.                   |
+| ignoredCategories | Brakes          | (Optional) Comma-separated categories to omit.                              |
+| itemList          | ITEM1,ITEM2     | (Optional) Comma-separated item numbers.                                    |
+
+Response Object Fields:
+
+data:
+
+models: (Array of Strings) List of machine models (e.g., "250 2X4", "300 4X4").
+
+error: (Object) Standard error block.
+
+status: (String) success, failed, error.
+
+Example Success Response (GET {{api_url}}/fitment/getModelOptions?type=ATV&make=ARCTIC%20CAT&year=2001&category=Electrical&subCategory=Starters):
+
+{
+  "data": {
+    "models": [
+      "250 2X4",
+      "250 4X4",
+      "300 2X4",
+      "300 4X4",
+      "400 4X4 AUTOMATIC", // Combined from original
+      "400 AUTOMATIC 2X4"
+      // ... more models
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Fitment Products
+Endpoint: GET {{api_url}}/fitment/getFitmentProducts?make={make}&year={year}&model={model}&category={category}&subCategory={subCategory}&onlyInStock={onlyInStock}&ignoredCategories={ignoredCategories}&itemList={itemList}
+
+Returns all fitment products matching make, year, model, and optional filters.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters:
+| Name                | Example Value          | Description                                                                 |
+|---------------------|------------------------|-----------------------------------------------------------------------------|
+| make              | ARCTIC CAT           | (Required) Machine make.                                                    |
+| year              | 2001                 | (Required) Machine year.                                                    |
+| model             | 250 2X4              | (Required) Machine model.                                                   |
+| category          | Drive/Transmission   | (Optional) Product category filter.                                         |
+| subCategory       | Axles                | (Optional) Product subcategory filter.                                      |
+| onlyInStock       | false                | (Optional) If true, only in-stock items.                                  |
+| ignoredCategories | Brakes               | (Optional) Comma-separated categories to omit.                              |
+| itemList          | ITEM1,ITEM2          | (Optional) Comma-separated item numbers.                                    |
+
+Response Object Fields:
+
+data:
+
+fitmentProducts: (Array of Objects) Each object represents a fitment product.
+
+type: (String) Machine type.
+
+category: (String) Product category.
+
+subCategory: (String) Product subcategory.
+
+make: (String) Machine make.
+
+year: (String) Machine year.
+
+model: (String) Machine model.
+
+itemNumber: (String) Gamma item number.
+
+description: (String) Item description.
+
+attrs: (Array of Objects) Attributes for the fitment item.
+
+attributeValue: (String) Value of the attribute.
+
+attributeName: (String) Display name for the attribute.
+
+error: (Object) Standard error block.
+
+status: (String) success, failed, error.
+
+Example Success Response (GET {{api_url}}/fitment/getFitmentProducts?make=ARCTIC%20CAT&year=2010&model=550%20H1%20EFI&category=Drive/Transmission&subCategory=Axles&onlyInStock=false):
+
+{
+  "data": {
+    "fitmentProducts": [ // Field name was "FitmentProducts" in example, standardizing to camelCase
+      {
+        "type": "ATV",
+        "category": "Drive/Transmission",
+        "subCategory": "Axles",
+        "make": "ARCTIC CAT",
+        "year": "2010",
+        "model": "550 H1 EFI", // Corrected from "550 H1. EFI"
+        "itemNumber": "PARTXYZ",
+        "description": "Sample Axle",
+        "attrs": [
+          {
+            "attributeName": "Position",
+            "attributeValue": "Front Left"
+          }
+        ]
+      }
+      // ... more products
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Fitment Categories
+Endpoint: GET {{api_url}}/fitment/getFitmentCategories?type={type}&make={make}&year={year}&model={model}&category={category}&filterEngineSize={filterEngineSize}&ignoreCache={ignoreCache}&ignoredCategories={ignoredCategories}
+
+Returns categories and subcategories for products requiring fitment. Set ignoreCache=true if using filters.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters (all optional):
+| Name                | Example Value  | Description                                                                 |
+|---------------------|----------------|-----------------------------------------------------------------------------|
+| type              | ATV          | Machine type (e.g., ATV, UTV/SXS).                                          |
+| make              | ARCTIC CAT   | Machine make.                                                               |
+| year              | 2010         | Machine year.                                                               |
+| model             | 550 H1 EFI   | Machine model.                                                              |
+| category          | Electrical   | Specific category to return (for its subcategories).                        |
+| filterEngineSize  | true         | (Boolean)                                                                   |
+| ignoreCache       | true         | (Boolean) Set to true if any filters are used.                            |
+| ignoredCategories | Brakes       | Comma-separated categories to omit.                                         |
+
+Response Object Fields:
+
+data:
+
+fitmentCategories: (Array of Objects)
+
+type: (String) Machine type for the category.
+
+category: (String) Main category.
+
+subCategory: (String) Subcategory.
+
+categoryItem: (String) Example item in this category/subcategory (from example).
+
+error: (Object) Standard error block.
+
+status: (String) success, failed, error.
+
+Example Success Response (With Filters):
+
+{
+  "data": {
+    "fitmentCategories": [
+      {
+        "subCategory": "Solenoids",
+        "categoryItem": "74-00461", // This field was in the example
+        "type": "ATV",
+        "category": "Electrical"
+      }
+      // ... more categories
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Filter Tree Options
+Endpoint: GET {{api_url}}/fitment/getFilterTreeOptions?make={make}&year={year}&model={model}&onlyInStock={onlyInStock}
+
+Returns objects for use with jstree jQuery plugin to create a tree view filter for product results.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters:
+| Name          | Example Value | Description                                                                 |
+|---------------|---------------|-----------------------------------------------------------------------------|
+| make        | ARCTIC CAT  | (Required) Machine make.                                                    |
+| year        | 2010        | (Required) Machine year.                                                    |
+| model       | 550 H1 EFI  | (Required) Machine model.                                                   |
+| onlyInStock | true        | (Boolean, Required) If true, only categories with in-stock products.      |
+
+Response Object (Array of jstree node objects):
+
+Each object:
+
+id: (String) e.g., "CATEGORY-Carburation/Exhaust", "SUBCATEGORY-Air-Filters".
+
+text: (String) Display text for the node.
+
+children: (Array of Objects) Nested node objects for subcategories.
+
+parent: (String) ID of the parent node (implicitly).
+
+Example Success Response:
+
+[
+  {
+    "id": "CATEGORY-Carburation/Exhaust",
+    "text": "Carburation/Exhaust",
+    "children": [
+      {
+        "id": "SUBCATEGORY-Air-Filters",
+        "text": "Air Filters",
+        "children": [] // or more children if there are sub-subcategories
+      }
+      // ... more subcategories
+    ]
+  }
+  // ... more categories
+]
+
+GET Get Similar Machine Fitments
+Endpoint: GET {{api_url}}/fitment/getSimilarMachineFitments?type={type}&category={category}&subCategory={subCategory}&make={make}&year={year}&model={model}&filterEngineSize={filterEngineSize}&ignoredCategories={ignoredCategories}&itemList={itemList}
+
+Finds fitments for similar machines within a type and category. Useful for fitment verification across multiple model formats.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters:
+| Name                | Example Value        | Description                                                                 |
+|---------------------|----------------------|-----------------------------------------------------------------------------|
+| type              | ATV                | (Required) Product type.                                                    |
+| category          | Controls/Steering  | (Required) Category of fitments.                                            |
+| make              | ARCTIC CAT         | (Required) Machine make.                                                    |
+| year              | 2011               | (Required) Machine year.                                                    |
+| subCategory       | A-Arm Bushing Kits | (Optional) Subcategory of fitments.                                         |
+| model             | 1000 H2 LTD        | (Optional) Machine model (required if filterEngineSize=true).             |
+| filterEngineSize  | true               | (Optional, Boolean) If true, only same engine size.                       |
+| ignoredCategories | Brakes             | (Optional) Comma-separated categories to omit.                              |
+| itemList          | ITEM1,ITEM2        | (Optional) Comma-separated items; type and category can be omitted.     |
+
+Response Object Fields:
+
+data:
+
+fitments: (Array of Objects) List of fitments for similar machines. Each element contains:
+
+engineSize: (String) Engine size.
+
+make: (String) Fitment make.
+
+years: (String) Fitment years.
+
+model: (String) Fitment model.
+
+notes: (Object) SKU-specific notes (e.g., "50-1060": "2 kits required per vehicle").
+
+Additional keys matching descriptions values (e.g., "All Balls Racing A-Arm Bushing Kit Front Lower": "50-1060").
+
+descriptions: (Array of Strings) List of description keys found in fitments elements.
+
+error: (Object) Standard error block.
+
+status: (String) success, failed, error.
+
+Example Success Response:
+
+{
+  "data": {
+    "fitments": [
+      {
+        "engineSize": "1000",
+        "make": "ARCTIC CAT",
+        "years": "2010-2011",
+        "model": "THUNDERCAT H2",
+        "All Balls Racing A-Arm Bushing Kit Front Lower": "50-1060",
+        "All Balls Racing A-Arm Bushing Kit Front Upper": "50-1061",
+        "notes": {
+          "50-1060": "2 kits required per vehicle",
+          "50-1061": "2 kits required per vehicle"
+        }
+      }
+      // ... more similar fitments
+    ],
+    "descriptions": [
+      "All Balls Racing A-Arm Bushing Kit Front Lower",
+      "All Balls Racing A-Arm Bushing Kit Front Upper"
+      // ... other description keys
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
+
+GET Get Fitment Machines (by Type/Category)
+Endpoint: GET {{api_url}}/fitment/getFitmentMachines?type={type}&category={category}&subCategory={subCategory}&ignoredCategories={ignoredCategories}&itemList={itemList}
+
+Optionally accepts type, category, and subcategory; returns a list of matching fitment machines. Used for creating make, year, model selection applications.
+
+Headers:
+| Header          | Value                 |
+|-----------------|-----------------------|
+| Authorization | Bearer {auth_token} |
+
+Parameters (all optional):
+| Name                | Example Value        | Description                                                                 |
+|---------------------|----------------------|-----------------------------------------------------------------------------|
+| type              | ATV                | Machine type filter (recommended).                                          |
+| category          | Drive/Transmission | Product category label.                                                     |
+| subCategory       | Axles              | Product subcategory label.                                                  |
+| ignoredCategories | Brakes             | Comma-separated categories to omit.                                         |
+| itemList          | ITEM1,ITEM2        | Comma-separated items; only machines with fitments for these items.         |
+
+Response Object Fields:
+
+data:
+
+fitmentMachines: (Array of Objects) Each object represents a fitment machine.
+
+make: (String) Machine make.
+
+year: (String) Machine year.
+
+model: (String) Machine model.
+
+error: (Object) Standard error block.
+
+status: (String) success, failed, error.
+
+Example Success Response (GET {{api_url}}/fitment/getFitmentMachines?type=ATV&category=Drive/Transmission&subCategory=Axles):
+
+{
+  "data": {
+    "fitmentMachines": [
+      {
+        "make": "POLARIS",
+        "year": "2021",
+        "model": "SPORTSMAN TOURING 570"
+      },
+      {
+        "make": "CAN-AM",
+        "year": "2020",
+        "model": "OUTLANDER 650"
+      }
+      // ... more machines
+    ]
+  },
+  "error": {},
+  "status": "success"
+}
