@@ -52,7 +52,7 @@
   padding: var(--fitment-spacing-lg);
   border: 1px solid var(--fitment-border-color);
   border-radius: var(--fitment-border-radius-lg);
-  background-color: var(--fitment-background-color);
+  background-color: #f7f7f7;
   box-shadow: var(--fitment-box-shadow-medium);
 }
 .fitment-header {
@@ -112,13 +112,13 @@
   border-radius: var(--buttons-radius, var(--fitment-border-radius-md));
   font-weight: var(--font-bolder-weight);
   text-transform: var(--font-buttons-transform);
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 2.4rem;
   transition: all var(--fitment-transition-medium);
   position: relative;
 }
 .fitment-find-button {
   color: var(--fitment-primary-text-color);
-  background-color: var(--fitment-primary-color);
+  background-color: rgb(var(--color-button));
   border: 1px solid transparent;
 }
 .fitment-find-button:not(:disabled):hover {
